@@ -1,0 +1,29 @@
+/ - Home page
+/login - Login page
+/register - User registration page
+/friends - Your friends list
+/messages - Direct messages between friends
+/notifications - All user notifications
+/notifications/{id} - Specific notification
+
+/groups - List of groups
+/groups/create - Create a new group
+/groups/{id} - Specific group details
+/groups/{id}/edit - Edit group details (Group admin only)
+/groups/{id}/messages - Messages in the group
+/groups/{id}/availabilities - Available dates in the group - can redirect to /groups/{id}/events/create from here
+/groups/{id}/events - Organized events in the group
+/groups/{id}/events/create - Create a new event in the group
+/groups/{id}/events/{event_id} - Specific event details
+/groups/{id}/events/{event_id}/edit - Edit event details
+/groups/{id}/members - List of group members
+/groups/{id}/add-member - Add a member to the group
+/groups/{id}/remove-member - Remove a member from the group
+
+/{id} - A user’s profile (with privacy settings consideration)
+/{id}/edit - Edit user profile (accessible to the user and Admin)
+
+/admin/users - List all users (Admin only)
+/admin/groups - List all groups (Admin only)
+/admin/logs - View logs (Admin only)
+/search - Search page with filter for users or groups (only show groups the user is a part of)

@@ -6,6 +6,8 @@ CREATE TABLE Users (
     password_hash VARCHAR(255),
     first_name VARCHAR(255),
     last_name VARCHAR(255),
+    role VARCHAR(50),
+    privacy VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -30,9 +32,10 @@ CREATE TABLE UserGroups (
     FOREIGN KEY (group_id) REFERENCES Groups(id)
 );
 
--- Availabilities Table
-CREATE TABLE Availabilities (
+-- GroupAvailabilities Table
+CREATE TABLE GroupAvailabilities (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    group_id BIGINT,
     user_id BIGINT,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
@@ -66,6 +69,18 @@ CREATE TABLE EventParticipants (
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
+-- EventComments Table
+CREATE TABLE EventComments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    event_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_id) REFERENCES Events(id),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+
+
 -- Notifications Table
 CREATE TABLE Notifications (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -76,8 +91,30 @@ CREATE TABLE Notifications (
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
+-- Conversations Table
+CREATE TABLE Conversations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user1_id BIGINT NOT NULL,
+    user2_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (user1_id, user2_id),
+    FOREIGN KEY (user1_id) REFERENCES Users(id),
+    FOREIGN KEY (user2_id) REFERENCES Users(id)
+);
+
 -- Messages Table
 CREATE TABLE Messages (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id BIGINT NOT NULL,
+    sender_id BIGINT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES Conversations(id),
+    FOREIGN KEY (sender_id) REFERENCES Users(id)
+);
+
+-- GroupMessages Table
+CREATE TABLE GroupMessages (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     group_id BIGINT,
     user_id BIGINT,
