@@ -104,6 +104,6 @@ CREATE TABLE AuditLogs (
     user_id BIGINT,
     action VARCHAR(255),
     details TEXT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
