@@ -1,10 +1,13 @@
-/ - Home page
+/ - Home page - not an endpoint, just a landing page
 /login - Login page
 /register - User registration page
 /friends - Your friends list
 /messages - Direct messages between friends
 /notifications - All user notifications
 /notifications/{id} - Specific notification
+/{id} - A user’s profile (with privacy settings consideration)
+/{id}/edit - Edit user profile (accessible to the user and Admin)
+/search - Search page with filter for users or groups (only show groups the user is a part of)
 
 /groups - List of groups
 /groups/create - Create a new group
@@ -16,14 +19,24 @@
 /groups/{id}/events/create - Create a new event in the group
 /groups/{id}/events/{event_id} - Specific event details
 /groups/{id}/events/{event_id}/edit - Edit event details
+/groups/{id}/events/{event_id}/cancel - HIDDEN - Cancel an event
+/groups/{id}/events/{event_id}/attendees - HIDDEN - Endpoint fetches attending list for an event
 /groups/{id}/members - List of group members
-/groups/{id}/add-member - Add a member to the group
-/groups/{id}/remove-member - Remove a member from the group
+/groups/{id}/members/{user-id}/add-member - HIDDEN - add a new member to the group
+/groups/{id}/members/{user-id}/remove-member - HIDDEN - Remove a member from the group
+/groups/{id}/members/{user_id}/promote - HIDDEN - Promote a group member to Group Admin
+/groups/{id}/members/{user_id}/demote - HIDDEN - Demote a group admin to group member
 
-/{id} - A user’s profile (with privacy settings consideration)
-/{id}/edit - Edit user profile (accessible to the user and Admin)
-
+/admin - Show Admin options (Admin only)
 /admin/users - List all users (Admin only)
 /admin/groups - List all groups (Admin only)
 /admin/logs - View logs (Admin only)
-/search - Search page with filter for users or groups (only show groups the user is a part of)
+/admin/logs/clear - HIDDEN - endpoint to clear the logs if ever necessary
+
+/users/{id}/block - HIDDEN - Endpoint to block a user
+/users/{id}/unblock - HIDDEN - Endpoint to unblock a user
+/users/{id}/reset-password - HIDDEN - Endpoint to initiate a password reset for a user - need email confirmation stuff?
+
+
+
+-- FIX THE LIST AND FIGURE OUT THE DIFFERENCE BETWEEN ENDPOINTS AND FRONTEND PAGES BEFORE PUSHING MORE
