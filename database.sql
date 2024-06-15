@@ -12,6 +12,16 @@ CREATE TABLE Users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Blocks Table
+CREATE TABLE Blocks (
+    blocker_id BIGINT,
+    blocked_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (blocker_id, blocked_id),
+    FOREIGN KEY (blocker_id) REFERENCES Users(id),
+    FOREIGN KEY (blocked_id) REFERENCES Users(id)
+);
+
 -- Groups Table
 CREATE TABLE Groups (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -133,6 +143,18 @@ CREATE TABLE Friendships (
     PRIMARY KEY (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (friend_id) REFERENCES Users(id)
+);
+
+-- FriendRequests Table
+CREATE TABLE FriendRequests (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    sender_id BIGINT,
+    receiver_id BIGINT,
+    status VARCHAR(50) DEFAULT 'PENDING', -- Possible values: 'PENDING', 'ACCEPTED', 'DECLINED'
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES Users(id),
+    FOREIGN KEY (receiver_id) REFERENCES Users(id)
 );
 
 -- AuditLogs Table

@@ -1,12 +1,9 @@
-/ - Home page - not an endpoint, just a landing page
-/login - Login page
+/login - Login page - POST
 /register - User registration page
 /friends - Your friends list
 /messages - Direct messages between friends
 /notifications - All user notifications
 /notifications/{id} - Specific notification
-/{id} - A user’s profile (with privacy settings consideration)
-/{id}/edit - Edit user profile (accessible to the user and Admin)
 /search - Search page with filter for users or groups (only show groups the user is a part of)
 
 /groups - List of groups
@@ -19,24 +16,33 @@
 /groups/{id}/events/create - Create a new event in the group
 /groups/{id}/events/{event_id} - Specific event details
 /groups/{id}/events/{event_id}/edit - Edit event details
-/groups/{id}/events/{event_id}/cancel - HIDDEN - Cancel an event
-/groups/{id}/events/{event_id}/attendees - HIDDEN - Endpoint fetches attending list for an event
+/groups/{id}/events/{event_id}/cancel - Cancel an event
+/groups/{id}/events/{event_id}/attendees - Endpoint fetches attending list for an event
 /groups/{id}/members - List of group members
-/groups/{id}/members/{user-id}/add-member - HIDDEN - add a new member to the group
-/groups/{id}/members/{user-id}/remove-member - HIDDEN - Remove a member from the group
-/groups/{id}/members/{user_id}/promote - HIDDEN - Promote a group member to Group Admin
-/groups/{id}/members/{user_id}/demote - HIDDEN - Demote a group admin to group member
+/groups/{id}/members/{user-id}/add-member - add a new member to the group
+/groups/{id}/members/{user-id}/remove-member - Remove a member from the group
+/groups/{id}/members/{user_id}/promote - Promote a group member to Group Admin
+/groups/{id}/members/{user_id}/demote - Demote a group admin to group member
 
 /admin - Show Admin options (Admin only)
 /admin/users - List all users (Admin only)
 /admin/groups - List all groups (Admin only)
 /admin/logs - View logs (Admin only)
-/admin/logs/clear - HIDDEN - endpoint to clear the logs if ever necessary
+/admin/logs/clear - endpoint to clear the logs if ever necessary
 
-/users/{id}/block - HIDDEN - Endpoint to block a user
-/users/{id}/unblock - HIDDEN - Endpoint to unblock a user
-/users/{id}/reset-password - HIDDEN - Endpoint to initiate a password reset for a user - need email confirmation stuff?
+/users/{id} - A user’s profile (with privacy settings consideration)
+/users/{id}/edit - Edit user profile (accessible to the user and Admin)
+/users/{id}/friends - Your friends list
+/users/{id}/request - request to add a friends
+/users/{id}/requests - Fetch all requests
+/users/{id}/requests/{request_id}/accept - accept a friend request
+/users/{id}/requests/{request_id}/deny - deny a friend request
+/users/{id}/messages - Direct messages
+/users/{id}/notifications - All user notifications
+/users/{id}/notifications/{notification_id} - Specific notification
+/users/{id}/notifications/{notification_id}/respond - respond to a notification
+/users/{id}/block - Endpoint to block a user
+/users/{id}/unblock - Endpoint to unblock a user
+/users/{id}/reset-password - Endpoint to initiate a password reset for a user - need email confirmation stuff
 
-
-
--- FIX THE LIST AND FIGURE OUT THE DIFFERENCE BETWEEN ENDPOINTS AND FRONTEND PAGES BEFORE PUSHING MORE
+EDIT NOTIFICATIONS TO ACCEPT DIFFERENT TYPES THAT CAN BE RESPONDED TO

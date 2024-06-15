@@ -1,0 +1,30 @@
+/ - Home page
+
+/login - Either make a /login or a modal for the login
+/register - same as above
+/friends - Friends list
+/messages - Direct messages list - maybe including group messages
+/messages/{id} - access a DM
+/notifications - Displays all notifications but also in a NAV menu
+    - /notifications/{id} - dont know if this is needed as I can just have actions as part of the notifications list
+/user/{id} - A Users profile
+/profile - Personal profile
+/profile/edit - edit your profile
+/search - search page, also have search bar in NAV
+
+/groups - your own groups
+/groups/create - create a group, potential modal
+/groups/{id} - view a specific group
+/groups/{id}/edit - edit a group as the admin
+/groups/{id}/messages - the messages in the group
+/groups/{id}/events - the groups events
+/groups/{id}/events/create - create an event, potential modal
+/groups/{id}/events/{event_id} - view an event
+/groups/{id}/events/{event_id}/edit - edit an event
+/groups/{id}/members - list of members in the group
+/groups/{id}/add-member - add a member to the group
+
+/admin - The base admin page
+/admin/users - List all users
+/admin/groups - List all groups
+/admin/logs - view the logs
