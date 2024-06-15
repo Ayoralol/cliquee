@@ -44,5 +44,3 @@
 /users/{id}/block - Endpoint to block a user
 /users/{id}/unblock - Endpoint to unblock a user
 /users/{id}/reset-password - Endpoint to initiate a password reset for a user - need email confirmation stuff
-
-EDIT NOTIFICATIONS TO ACCEPT DIFFERENT TYPES THAT CAN BE RESPONDED TO

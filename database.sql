@@ -90,12 +90,14 @@ CREATE TABLE EventComments (
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
-
 -- Notifications Table
 CREATE TABLE Notifications (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT,
+    type VARCHAR(50),
     message TEXT,
+    related_id BIGINT,
+    related_type VARCHAR(50),
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id)
