@@ -1,46 +1,45 @@
-/login - Login page - POST
-/register - User registration page
-/friends - Your friends list
-/messages - Direct messages between friends
-/notifications - All user notifications
-/notifications/{id} - Specific notification
-/search - Search page with filter for users or groups (only show groups the user is a part of)
+/login - GET - Login page
+/register - POST - User registration page
+/search - GET - Search for users
+/search/groups - GET - Search for groups the user is a part of
 
-/groups - List of groups
-/groups/create - Create a new group
-/groups/{id} - Specific group details
-/groups/{id}/edit - Edit group details (Group admin only)
-/groups/{id}/messages - Messages in the group
-/groups/{id}/availabilities - Available dates in the group - can redirect to /groups/{id}/events/create from here
-/groups/{id}/events - Organized events in the group
-/groups/{id}/events/create - Create a new event in the group
-/groups/{id}/events/{event_id} - Specific event details
-/groups/{id}/events/{event_id}/edit - Edit event details
-/groups/{id}/events/{event_id}/cancel - Cancel an event
-/groups/{id}/events/{event_id}/attendees - Endpoint fetches attending list for an event
-/groups/{id}/members - List of group members
-/groups/{id}/members/{user-id}/add-member - add a new member to the group
-/groups/{id}/members/{user-id}/remove-member - Remove a member from the group
-/groups/{id}/members/{user_id}/promote - Promote a group member to Group Admin
-/groups/{id}/members/{user_id}/demote - Demote a group admin to group member
+/groups - GET - List of groups
+/groups/create - POST - Create a new group
+/groups/{id} - GET - Specific group details
+/groups/{id}/edit - PUT - Edit group details (Group admin only)
+/groups/{id}/messages - GET - Messages in the group
+/groups/{id}/availabilities - GET - Available dates in the group - can redirect to /groups/{id}/events/create from here
+/groups/{id}/events - GET - Organized events in the group
+/groups/{id}/events/create - POST - Create a new event in the group
+/groups/{id}/events/{event_id} - GET - Specific event details
+/groups/{id}/events/{event_id}/edit - PUT - Edit event details
+/groups/{id}/events/{event_id}/cancel - DELETE - Cancel an event
+/groups/{id}/events/{event_id}/attendees - GET - Endpoint fetches attending list for an event
+/groups/{id}/members - GET - List of group members
+/groups/{id}/members/{user-id}/add-member - POST - add a new member to the group
+/groups/{id}/members/{user-id}/remove-member - DELETE - Remove a member from the group
+/groups/{id}/members/{user_id}/promote - POST - Promote a group member to Group Admin
+/groups/{id}/members/{user_id}/demote - POST - Demote a group admin to group member
 
-/admin - Show Admin options (Admin only)
-/admin/users - List all users (Admin only)
-/admin/groups - List all groups (Admin only)
-/admin/logs - View logs (Admin only)
-/admin/logs/clear - endpoint to clear the logs if ever necessary
+/users/{id} - GET - A user’s profile (with privacy settings consideration)
+/users/{id}/edit - PUT - Edit user profile (accessible to the user and Admin)
+/users/{id}/friends - GET - Your friends list
+/users/{id}/request - POST - request to add a friends
+/users/{id}/requests - GET - Fetch all requests
+/users/{id}/requests/{request_id}/accept - POST - accept a friend request
+/users/{id}/requests/{request_id}/deny - POST - deny a friend request
+/users/{id}/messages - GET - Direct messages
+/users/{id}/notifications - GET - All user notifications
+/users/{id}/notifications/{notification_id} - GET - Specific notification
+/users/{id}/notifications/{notification_id}/respond - POST - respond to a notification
+/users/{id}/block - POST - Endpoint to block a user
+/users/{id}/unblock - POST - Endpoint to unblock a user
+/users/{id}/reset-password - POST - Endpoint to initiate a password reset for a user - need email confirmation stuff
 
-/users/{id} - A user’s profile (with privacy settings consideration)
-/users/{id}/edit - Edit user profile (accessible to the user and Admin)
-/users/{id}/friends - Your friends list
-/users/{id}/request - request to add a friends
-/users/{id}/requests - Fetch all requests
-/users/{id}/requests/{request_id}/accept - accept a friend request
-/users/{id}/requests/{request_id}/deny - deny a friend request
-/users/{id}/messages - Direct messages
-/users/{id}/notifications - All user notifications
-/users/{id}/notifications/{notification_id} - Specific notification
-/users/{id}/notifications/{notification_id}/respond - respond to a notification
-/users/{id}/block - Endpoint to block a user
-/users/{id}/unblock - Endpoint to unblock a user
-/users/{id}/reset-password - Endpoint to initiate a password reset for a user - need email confirmation stuff
+/admin - GET - Show Admin options (Admin only)
+/admin/users - GET - List all users (Admin only)
+/admin/groups - GET - List all groups (Admin only)
+/admin/logs - GET - View logs (Admin only)
+/admin/logs/clear - DELETE - endpoint to clear the logs if ever necessary
+
+--
