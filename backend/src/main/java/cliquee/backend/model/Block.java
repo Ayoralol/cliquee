@@ -22,12 +22,12 @@ public class Block {
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("blocker_id")
   @JoinColumn(name = "blocker_id")
-  private Long blocker;
+  private User blocker;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("blocked_id")
   @JoinColumn(name = "blocked_id")
-  private Long blocked;
+  private User blocked;
 
   private LocalDateTime created_at = LocalDateTime.now();
 }

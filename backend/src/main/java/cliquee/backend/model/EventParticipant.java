@@ -1,7 +1,7 @@
 package cliquee.backend.model;
 
 import cliquee.backend.model.embedded.EventParticipantId;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -16,7 +16,7 @@ import lombok.Data;
 @Table(name = "event_participants")
 public class EventParticipant {
 
-  @Embedded
+  @EmbeddedId
   private EventParticipantId id;
 
   @ManyToOne(fetch = FetchType.LAZY)

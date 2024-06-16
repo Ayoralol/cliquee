@@ -9,9 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.management.Notification;
 import lombok.Data;
-import org.springframework.cglib.core.Block;
 
 @Data
 @Entity
