@@ -21,25 +21,32 @@
 /groups/{id}/members/{user_id}/promote - POST - Promote a group member to Group Admin
 /groups/{id}/members/{user_id}/demote - POST - Demote a group admin to group member
 
-/users/{id} - GET - A user’s profile (with privacy settings consideration)
-/users/{id}/edit - PUT - Edit user profile (accessible to the user and Admin)
-/users/{id}/friends - GET - Your friends list
-/users/{id}/request - POST - request to add a friends
-/users/{id}/requests - GET - Fetch all requests
-/users/{id}/requests/{request_id}/accept - POST - accept a friend request
-/users/{id}/requests/{request_id}/deny - POST - deny a friend request
-/users/{id}/messages - GET - Direct messages
-/users/{id}/notifications - GET - All user notifications
-/users/{id}/notifications/{notification_id} - GET - Specific notification
-/users/{id}/notifications/{notification_id}/respond - POST - respond to a notification
-/users/{id}/block - POST - Endpoint to block a user
-/users/{id}/unblock - POST - Endpoint to unblock a user
-/users/{id}/reset-password - POST - Endpoint to initiate a password reset for a user - need email confirmation stuff
+* /users - GET - Get all users
+* /users/{id} - GET - A user’s profile
+* /users/username/{username} - GET - Get profile with username
+* /users/email/{email} - GET - get profile with email
+* /users/{id}/update - PUT - Edit user profile (accessible to the user and Admin)
+* /users/create - POST - Create a user
+* /users/{id}/delete - POST - Delete the user
+* /users/{id}/change-password - POST - Endpoint to initiate a password reset for a user - need email confirmation stuff
+/friends - GET - Your friends list
+/friends/{id}/request - POST - request to add a friend
+/friends/{id}/requests - GET - Fetch all requests
+/friends/{id}/requests/{request_id}/accept - POST - accept a friend request
+/friends/{id}/requests/{request_id}/deny - POST - deny a friend request
+/notifications - GET - All user notifications
+/notifications/{notification_id} - GET - Specific notification
+/notifications/{notification_id}/respond - POST - respond to a notification
+/block/{id} - POST - Endpoint to block a user
+/unblock/{id} - POST - Endpoint to unblock a user
+/conversations - GET - Get a list of all your conversations
+/conversations/{conversation_id} - GET - Access a conversation
 
 /admin - GET - Show Admin options (Admin only)
 /admin/users - GET - List all users (Admin only)
 /admin/groups - GET - List all groups (Admin only)
 /admin/logs - GET - View logs (Admin only)
 /admin/logs/clear - DELETE - endpoint to clear the logs if ever necessary
+
 
 --
