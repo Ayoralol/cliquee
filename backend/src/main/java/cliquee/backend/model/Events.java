@@ -10,20 +10,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "events")
+public class Events {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String username;
-  private String email;
-  private String password;
-  private String first_name;
-  private String last_name;
-  private String role = "USER";
-  private String privacy = "PUBLIC";
-  private LocalDateTime createdAt = LocalDateTime.now();
-  private LocalDateTime updatedAt = LocalDateTime.now();
+  private Long group_id;
+  private String name;
+  private String description;
+  private String location;
+  private LocalDateTime start_time;
+  private LocalDateTime end_time;
+  private LocalDateTime created_at = LocalDateTime.now();
+  private LocalDateTime updated_at = LocalDateTime.now();
 }
