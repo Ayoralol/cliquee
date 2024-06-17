@@ -17,10 +17,6 @@ public class UserService {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  public List<User> getAllUsersAdmin() {
-    return userRepository.findAll();
-  }
-
   public List<User> getAllUsers(Long userId) {
     return userRepository.findAllExcludingBlocked(userId);
   }
