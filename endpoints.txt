@@ -30,6 +30,7 @@
 * /users/{id}/delete - POST - Delete the user
 * /users/{id}/change-password - POST - Endpoint to initiate a password reset for a user - need email confirmation stuff
 * /users/{id}/block/{blocked_id} - POST - Endpoint to block a user
+* /users/{id}/blocked - GET - Get all of your blocked users
 * /users/{id}/unblock/{blocked_id} - POST - Endpoint to unblock a user
 * /friendships/{id} - GET - Your friends list
 * /friendships/{id}/request/{friend_id} - POST - request to add a friend

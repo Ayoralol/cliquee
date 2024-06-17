@@ -110,4 +110,10 @@ public class UserController {
       return ResponseEntity.badRequest().build();
     }
   }
+
+  @GetMapping("/{id}/blocked")
+  public ResponseEntity<List<Block>> getBlockedUsers(@PathVariable Long id) {
+    List<Block> blockedUsers = blockService.getBlockedUsers(id);
+    return ResponseEntity.ok(blockedUsers);
+  }
 }

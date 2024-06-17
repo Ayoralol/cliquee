@@ -4,6 +4,7 @@ import cliquee.backend.model.Block;
 import cliquee.backend.model.embedded.BlockId;
 import cliquee.backend.repository.BlockRepository;
 import cliquee.backend.repository.UserRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,9 @@ public class BlockService {
     } else {
       throw new IllegalArgumentException("Block relationship not found");
     }
+  }
+
+  public List<Block> getBlockedUsers(Long userId) {
+    return blockRepository.findByBlockerId(userId);
   }
 }
