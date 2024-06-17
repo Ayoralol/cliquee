@@ -1,6 +1,8 @@
 package cliquee.backend.controller;
 
+import cliquee.backend.model.Block;
 import cliquee.backend.model.User;
+import cliquee.backend.service.BlockService;
 import cliquee.backend.service.UserService;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private BlockService blockService;
 
   @GetMapping
   public List<User> getAllUsers() {
@@ -78,5 +83,31 @@ public class UserController {
   ) {
     userService.changePassword(id, newPassword);
     return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/{id}/block/{blocked_id}")
+  public ResponseEntity<Block> blockUser(
+    @PathVariable Long id,
+    @PathVariable Long blockedId
+  ) {
+    try {
+      Block block = blockService.blockUser(id, blockedId);
+      return ResponseEntity.ok(block);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(null);
+    }
+  }
+
+  @PostMapping("/{id}/unblock/{blocked_id}")
+  public ResponseEntity<Void> unblockUser(
+    @PathVariable Long id,
+    @PathVariable Long blockedId
+  ) {
+    try {
+      blockService.unblockUser(id, blockedId);
+      return ResponseEntity.noContent().build();
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 }

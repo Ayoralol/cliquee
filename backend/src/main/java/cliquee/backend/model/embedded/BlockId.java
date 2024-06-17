@@ -12,4 +12,11 @@ public class BlockId implements Serializable {
 
   private Long blocker_id;
   private Long blocked_id;
+
+  public BlockId() {}
+
+  public BlockId(Long blockerId, Long blockedId) {
+    this.blocker_id = blockerId;
+    this.blocked_id = blockedId;
+  }
 }
