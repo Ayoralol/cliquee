@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,30 +27,42 @@ public class UserController {
   @Autowired
   private BlockService blockService;
 
-  @GetMapping
-  public List<User> getAllUsers() {
-    return userService.getAllUsers();
+  @GetMapping("/{id}/all")
+  public List<User> getAllUsers(@PathVariable Long id) {
+    return userService.getAllUsers(id);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    Optional<User> user = userService.getUserById(id);
+  public ResponseEntity<User> getUserById(
+    @PathVariable Long id,
+    @RequestParam Long currentUserId
+  ) {
+    Optional<User> user = userService.getUserById(id, currentUserId);
     return user
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @GetMapping("/username/{username}")
-  public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-    Optional<User> user = userService.getUserByUsername(username);
+  public ResponseEntity<User> getUserByUsername(
+    @PathVariable String username,
+    @RequestParam Long currentUserId
+  ) {
+    Optional<User> user = userService.getUserByUsername(
+      username,
+      currentUserId
+    );
     return user
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @GetMapping("/email/{email}")
-  public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-    Optional<User> user = userService.getUserByEmail(email);
+  public ResponseEntity<User> getUserByEmail(
+    @PathVariable String email,
+    @RequestParam Long currentUserId
+  ) {
+    Optional<User> user = userService.getUserByEmail(email, currentUserId);
     return user
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
