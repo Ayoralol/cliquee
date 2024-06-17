@@ -21,12 +21,12 @@ public class Message {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "conversation_id", nullable = false)
+  @JoinColumn(name = "conversation", nullable = false)
   private Conversation conversation;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  private User sender;
 
   private String message;
   private LocalDateTime created_at = LocalDateTime.now();
@@ -37,7 +37,7 @@ public class Message {
   }
 
   public void setSenderId(Long senderId) {
-    this.user = new User();
-    this.user.setId(senderId);
+    this.sender = new User();
+    this.sender.setId(senderId);
   }
 }

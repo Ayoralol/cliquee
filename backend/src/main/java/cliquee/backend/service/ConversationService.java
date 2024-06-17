@@ -40,11 +40,11 @@ public class ConversationService {
   }
 
   public List<Message> getMessages(Long conversationId) {
-    return messageRepository.findAllByConversationId(conversationId);
+    return messageRepository.findAllByConversation_Id(conversationId);
   }
 
   public List<GroupMessage> getGroupMessages(Long groupId) {
-    return groupMessageRepository.findAllByGroupId(groupId);
+    return groupMessageRepository.findAllByGroup_Id(groupId);
   }
 
   public Message sendMessage(

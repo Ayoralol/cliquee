@@ -20,13 +20,13 @@ public class Friendship {
   private FriendshipId id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("user_id")
-  @JoinColumn(name = "user_id")
+  @MapsId("friend1Id")
+  @JoinColumn(name = "friend1_id")
   private User friend1;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("friend_id")
-  @JoinColumn(name = "friend_id")
+  @MapsId("friend2Id")
+  @JoinColumn(name = "friend2_id")
   private User friend2;
 
   private String status;

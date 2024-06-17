@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -33,5 +33,5 @@ public class Conversation {
   private LocalDateTime created_at = LocalDateTime.now();
 
   @OneToMany(mappedBy = "conversation")
-  private List<Message> messages;
+  private Set<Message> messages;
 }

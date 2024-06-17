@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface FriendshipRepository
   extends JpaRepository<Friendship, FriendshipId> {
   @Query(
-    "SELECT f FROM Friendship f WHERE f.user_id = :id OR f.friend_id = :id"
+    "SELECT f FROM Friendship f WHERE f.friend1.id = :id OR f.friend2.id = :userId"
   )
-  List<Friendship> findAllFriendshipsByUserId(Long id);
+  List<Friendship> findAllFriendshipsByUser_Id(Long userId);
 }

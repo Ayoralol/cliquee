@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupMessageRepository
   extends JpaRepository<GroupMessage, Long> {
-  List<GroupMessage> findAllByGroupId(Long groupId);
+  List<GroupMessage> findAllByGroup_Id(Long groupId);
 }

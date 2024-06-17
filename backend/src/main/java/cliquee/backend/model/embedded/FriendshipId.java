@@ -10,13 +10,13 @@ public class FriendshipId implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private Long user_id;
-  private Long friend_id;
+  private Long friend1Id;
+  private Long friend2Id;
 
   public FriendshipId() {}
 
   public FriendshipId(Long user_id, Long friend_id) {
-    this.user_id = user_id;
-    this.friend_id = friend_id;
+    this.friend1Id = user_id;
+    this.friend2Id = friend_id;
   }
 }

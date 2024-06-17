@@ -26,11 +26,11 @@ public class FriendshipService {
   private UserRepository userRepository;
 
   public List<Friendship> getAllFriendships(Long userId) {
-    return friendshipRepository.findAllFriendshipsByUserId(userId);
+    return friendshipRepository.findAllFriendshipsByUser_Id(userId);
   }
 
   public List<Long> getFriendIds(Long userId) {
-    List<Friendship> friendships = friendshipRepository.findAllFriendshipsByUserId(
+    List<Friendship> friendships = friendshipRepository.findAllFriendshipsByUser_Id(
       userId
     );
     return friendships

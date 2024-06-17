@@ -64,7 +64,7 @@ public class User {
   @OneToMany(mappedBy = "user2")
   private List<Conversation> user2Conversations;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "sender")
   private List<Message> messages;
 
   @OneToMany(mappedBy = "user")
