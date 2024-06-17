@@ -34,9 +34,10 @@
 * /friendships/{id}/requests - GET - Fetch all requests
 * /friendships/{id}/requests/accept/{request_id} - POST - accept a friend request
 * /friendships/{id}/requests/deny/{request_id} - POST - deny a friend request
-/notifications - GET - All user notifications
-/notifications/{notification_id} - GET - Specific notification
-/notifications/{notification_id}/respond - POST - respond to a notification
+* /notifications/{id} - GET - All user notifications
+* /notifications/{id}/{notification_id} - GET - Specific notification
+* /notifications/{id}/{notification_id}/respond - POST - respond to a notification
+* /notifications/{id}/{notification_id}/read - POST - read a notification
 /block/{id} - POST - Endpoint to block a user
 /unblock/{id} - POST - Endpoint to unblock a user
 /conversations - GET - Get a list of all your conversations

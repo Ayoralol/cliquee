@@ -30,4 +30,9 @@ public class Notification {
   private String related_type;
   private boolean is_read = false;
   private LocalDateTime created_at = LocalDateTime.now();
+
+  public Notification setRead(boolean isRead) {
+    this.is_read = isRead;
+    return this;
+  }
 }
