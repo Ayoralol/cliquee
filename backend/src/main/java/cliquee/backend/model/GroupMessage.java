@@ -30,4 +30,14 @@ public class GroupMessage {
 
   private String message;
   private LocalDateTime created_at = LocalDateTime.now();
+
+  public void setGroupId(Long groupId) {
+    this.group = new Group();
+    this.group.setId(groupId);
+  }
+
+  public void setUserId(Long userId) {
+    this.user = new User();
+    this.user.setId(userId);
+  }
 }

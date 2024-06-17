@@ -30,4 +30,14 @@ public class Message {
 
   private String message;
   private LocalDateTime created_at = LocalDateTime.now();
+
+  public void setConversationId(Long conversationId) {
+    this.conversation = new Conversation();
+    this.conversation.setId(conversationId);
+  }
+
+  public void setSenderId(Long senderId) {
+    this.user = new User();
+    this.user.setId(senderId);
+  }
 }

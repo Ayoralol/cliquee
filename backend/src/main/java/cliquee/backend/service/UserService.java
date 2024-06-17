@@ -37,6 +37,10 @@ public class UserService {
     return userRepository.findByEmailExcludingBlocked(email, userId);
   }
 
+  public List<User> searchUsers(String username, Long userId) {
+    return userRepository.searchUsersExcludingBlocked(username, userId);
+  }
+
   public User createUser(User user) {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository.save(user);

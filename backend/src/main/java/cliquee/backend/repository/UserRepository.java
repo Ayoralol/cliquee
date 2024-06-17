@@ -31,4 +31,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     "SELECT u FROM User u WHERE u.id NOT IN (SELECT b.blocked.id FROM Block b WHERE b.blocker.id = :userId) AND u.id NOT IN (SELECT b.blocker.id FROM Block b WHERE b.blocked.id = :userId)"
   )
   List<User> findAllExcludingBlocked(Long userId);
+
+  @Query(
+    "SELECT u FROM User u WHERE (LOWER(u.first_name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(u.last_name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(u.username) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND u.id NOT IN (SELECT b.blocked.id FROM Block b WHERE b.blocker.id = :userId) AND u.id NOT IN (SELECT b.blocker.id FROM Block b WHERE b.blocked.id = :userId)"
+  )
+  List<User> searchUsersExcludingBlocked(String searchTerm, Long userId);
 }

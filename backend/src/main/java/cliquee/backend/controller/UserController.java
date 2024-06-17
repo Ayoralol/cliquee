@@ -68,6 +68,15 @@ public class UserController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<List<User>> searchUsers(
+    @RequestParam String username,
+    @RequestParam Long currentUserId
+  ) {
+    List<User> users = userService.searchUsers(username, currentUserId);
+    return ResponseEntity.ok(users);
+  }
+
   @PutMapping("/{id}/update")
   public ResponseEntity<User> updateUser(
     @PathVariable Long id,
