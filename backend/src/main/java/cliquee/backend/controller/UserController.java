@@ -79,25 +79,4 @@ public class UserController {
     userService.changePassword(id, newPassword);
     return ResponseEntity.ok().build();
   }
-  // @GetMapping("/{id}/friends")
-
-  // @PostMapping("/{id}/request")
-
-  // @GetMapping("/{id}/requests")
-
-  // @PostMapping("/{id}/requests/{requestId}/accept")
-
-  // @PostMapping("/{id}/requests/{requestId}/deny")
-
-  // @GetMapping("/{id}/notifications")
-
-  // @GetMapping("/{id}/notifications/{notification_id}")
-
-  // @PostMapping("/{id}/notifications/{notification_id}/respond")
-
-  // @PostMapping("/{id}/block")
-
-  // @PostMapping("/{id}/unblock")
-
-  // @PostMapping("/{id}/reset-password")
 }

@@ -21,7 +21,7 @@
 /groups/{id}/members/{user_id}/promote - POST - Promote a group member to Group Admin
 /groups/{id}/members/{user_id}/demote - POST - Demote a group admin to group member
 
-* /users - GET - Get all users
+* /users - GET - Get all users (admin)
 * /users/{id} - GET - A user’s profile
 * /users/username/{username} - GET - Get profile with username
 * /users/email/{email} - GET - get profile with email
@@ -29,11 +29,11 @@
 * /users/create - POST - Create a user
 * /users/{id}/delete - POST - Delete the user
 * /users/{id}/change-password - POST - Endpoint to initiate a password reset for a user - need email confirmation stuff
-/friends - GET - Your friends list
-/friends/{id}/request - POST - request to add a friend
-/friends/{id}/requests - GET - Fetch all requests
-/friends/{id}/requests/{request_id}/accept - POST - accept a friend request
-/friends/{id}/requests/{request_id}/deny - POST - deny a friend request
+* /friendships/{id} - GET - Your friends list
+* /friendships/{id}/request/{friend_id} - POST - request to add a friend
+* /friendships/{id}/requests - GET - Fetch all requests
+* /friendships/{id}/requests/accept/{request_id} - POST - accept a friend request
+* /friendships/{id}/requests/deny/{request_id} - POST - deny a friend request
 /notifications - GET - All user notifications
 /notifications/{notification_id} - GET - Specific notification
 /notifications/{notification_id}/respond - POST - respond to a notification

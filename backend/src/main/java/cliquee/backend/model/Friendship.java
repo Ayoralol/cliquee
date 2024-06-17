@@ -31,4 +31,20 @@ public class Friendship {
 
   private String status;
   private LocalDateTime created_at = LocalDateTime.now();
+
+  public User getUser() {
+    return friend1;
+  }
+
+  public User getFriend() {
+    return friend2;
+  }
+
+  public void setUser(User user) {
+    this.friend1 = user;
+  }
+
+  public void setFriend(User friend) {
+    this.friend2 = friend;
+  }
 }
