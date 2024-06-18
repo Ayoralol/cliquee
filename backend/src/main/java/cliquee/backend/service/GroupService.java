@@ -5,14 +5,17 @@ import cliquee.backend.model.Event;
 import cliquee.backend.model.EventParticipant;
 import cliquee.backend.model.Group;
 import cliquee.backend.model.GroupAvailability;
+import cliquee.backend.model.User;
 import cliquee.backend.model.UserGroup;
 import cliquee.backend.repository.EventParticipantRepository;
 import cliquee.backend.repository.EventRepository;
 import cliquee.backend.repository.GroupAvailabilityRepository;
 import cliquee.backend.repository.GroupRepository;
 import cliquee.backend.repository.UserGroupRepository;
+import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,9 @@ public class GroupService {
   @Autowired
   private EventParticipantRepository groupParticipantsRepository;
 
+  @Autowired
+  private UserRepository userRepository;
+
   public List<Group> getAllGroups() {
     return groupRepository.findAll();
   }
@@ -46,7 +52,7 @@ public class GroupService {
     return groupRepository.findByNameContainingIgnoreCase(keyword);
   }
 
-  public Group getGroupById(Long id) {
+  public Group getGroupById(UUID id) {
     Optional<Group> group = groupRepository.findById(id);
     if (group.isPresent()) {
       return group.get();
@@ -55,24 +61,24 @@ public class GroupService {
     }
   }
 
-  public Group updateGroup(Long id, Group groupDetails) {
+  public Group updateGroup(UUID id, Group groupDetails) {
     Group group = getGroupById(id);
     group.setName(groupDetails.getName());
     group.setDescription(groupDetails.getDescription());
     return groupRepository.save(group);
   }
 
-  public List<Event> getGroupEvents(Long id) {
+  public List<Event> getGroupEvents(UUID id) {
     return eventRepository.findByGroupId(id);
   }
 
-  public Event createGroupEvent(Long groupId, Event event) {
+  public Event createGroupEvent(UUID groupId, Event event) {
     Group group = getGroupById(groupId);
     event.setGroup(group);
     return eventRepository.save(event);
   }
 
-  public Event getGroupEventById(Long groupId, Long eventId) {
+  public Event getGroupEventById(UUID groupId, UUID eventId) {
     return eventRepository
       .findByGroupIdAndId(groupId, eventId)
       .orElseThrow(() ->
@@ -83,8 +89,8 @@ public class GroupService {
   }
 
   public Event updateGroupEvent(
-    Long groupId,
-    Long eventId,
+    UUID groupId,
+    UUID eventId,
     Event eventDetails
   ) {
     Event event = getGroupEventById(groupId, eventId);
@@ -95,12 +101,12 @@ public class GroupService {
     return eventRepository.save(event);
   }
 
-  public void cancelGroupEvent(Long groupId, Long eventId) {
+  public void cancelGroupEvent(UUID groupId, UUID eventId) {
     Event event = getGroupEventById(groupId, eventId);
     eventRepository.delete(event);
   }
 
-  public List<GroupAvailability> getGroupAvailabilities(Long id) {
+  public List<GroupAvailability> getGroupAvailabilities(UUID id) {
     if (!groupRepository.existsById(id)) {
       throw new ResourceNotFoundException("Group not found with id " + id);
     }
@@ -108,8 +114,8 @@ public class GroupService {
   }
 
   public List<EventParticipant> getGroupEventParticipants(
-    Long id,
-    Long eventId
+    UUID id,
+    UUID eventId
   ) {
     if (!groupRepository.existsById(id)) {
       throw new ResourceNotFoundException("Group not found with id " + id);
@@ -117,22 +123,34 @@ public class GroupService {
     return groupParticipantsRepository.findByEventId(eventId);
   }
 
-  public List<UserGroup> getGroupMembers(Long groupId) {
+  public List<UserGroup> getGroupMembers(UUID groupId) {
     if (!groupRepository.existsById(groupId)) {
       throw new ResourceNotFoundException("Group not found with id " + groupId);
     }
     return userGroupRepository.findByGroupId(groupId);
   }
 
-  public UserGroup addGroupMember(Long groupId, Long userId) {
+  public void addGroupMember(UUID groupId, UUID userId) {
+    Group group = groupRepository
+      .findById(groupId)
+      .orElseThrow(() ->
+        new ResourceNotFoundException("Group not found with id " + groupId)
+      );
+
+    User user = userRepository
+      .findById(userId)
+      .orElseThrow(() ->
+        new ResourceNotFoundException("User not found with id " + userId)
+      );
+
     UserGroup userGroup = new UserGroup();
-    userGroup.setGroupId(groupId);
-    userGroup.setUserId(userId);
+    userGroup.setGroup(group);
+    userGroup.setUser(user);
     userGroup.setRole("MEMBER");
-    return userGroupRepository.save(userGroup);
+    userGroupRepository.save(userGroup);
   }
 
-  public void removeGroupMember(Long groupId, Long userId) {
+  public void removeGroupMember(UUID groupId, UUID userId) {
     UserGroup userGroup = userGroupRepository
       .findByGroupIdAndUserId(groupId, userId)
       .orElseThrow(() ->
@@ -143,7 +161,7 @@ public class GroupService {
     userGroupRepository.delete(userGroup);
   }
 
-  public UserGroup promoteGroupMember(Long groupId, Long userId) {
+  public UserGroup promoteGroupMember(UUID groupId, UUID userId) {
     UserGroup userGroup = userGroupRepository
       .findByGroupIdAndUserId(groupId, userId)
       .orElseThrow(() ->
@@ -155,7 +173,7 @@ public class GroupService {
     return userGroupRepository.save(userGroup);
   }
 
-  public UserGroup demoteGroupMember(Long groupId, Long userId) {
+  public UserGroup demoteGroupMember(UUID groupId, UUID userId) {
     UserGroup userGroup = userGroupRepository
       .findByGroupIdAndUserId(groupId, userId)
       .orElseThrow(() ->

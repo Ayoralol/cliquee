@@ -4,6 +4,7 @@ import cliquee.backend.model.User;
 import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,23 +18,23 @@ public class UserService {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  public List<User> getAllUsers(Long userId) {
+  public List<User> getAllUsers(UUID userId) {
     return userRepository.findAllExcludingBlocked(userId);
   }
 
-  public Optional<User> getUserById(Long id, Long userId) {
+  public Optional<User> getUserById(UUID id, UUID userId) {
     return userRepository.findByIdExcludingBlocked(id, userId);
   }
 
-  public Optional<User> getUserByUsername(String username, Long userId) {
+  public Optional<User> getUserByUsername(String username, UUID userId) {
     return userRepository.findByUsernameExcludingBlocked(username, userId);
   }
 
-  public Optional<User> getUserByEmail(String email, Long userId) {
+  public Optional<User> getUserByEmail(String email, UUID userId) {
     return userRepository.findByEmailExcludingBlocked(email, userId);
   }
 
-  public List<User> searchUsers(String username, Long userId) {
+  public List<User> searchUsers(String username, UUID userId) {
     return userRepository.searchUsersExcludingBlocked(username, userId);
   }
 
@@ -42,7 +43,7 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public User updateUser(Long id, User userDetails) {
+  public User updateUser(UUID id, User userDetails) {
     return userRepository
       .findById(id)
       .map(user -> {
@@ -61,11 +62,11 @@ public class UserService {
       });
   }
 
-  public void deleteUser(Long id) {
+  public void deleteUser(UUID id) {
     userRepository.deleteById(id);
   }
 
-  public void changePassword(Long id, String newPassword) {
+  public void changePassword(UUID id, String newPassword) {
     userRepository
       .findById(id)
       .ifPresent(user -> {

@@ -3,6 +3,7 @@ package cliquee.backend.repository;
 import cliquee.backend.model.Friendship;
 import cliquee.backend.model.embedded.FriendshipId;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,5 @@ public interface FriendshipRepository
   @Query(
     "SELECT f FROM Friendship f WHERE f.friend1.id = :id OR f.friend2.id = :userId"
   )
-  List<Friendship> findAllFriendshipsByUser_Id(Long userId);
+  List<Friendship> findAllFriendshipsByUser_Id(UUID userId);
 }

@@ -1,14 +1,17 @@
 package cliquee.backend.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 
 @Data
 @Entity
@@ -16,8 +19,9 @@ import lombok.Data;
 public class Group {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @UuidGenerator
+  @Column(updatable = false, nullable = false)
+  private UUID id;
 
   private String name;
   private String description;
@@ -25,7 +29,7 @@ public class Group {
   private LocalDateTime updated_at = LocalDateTime.now();
 
   @OneToMany(mappedBy = "group")
-  private List<UserGroup> userGroups;
+  private Set<UserGroup> userGroups = new HashSet<>();
 
   @OneToMany(mappedBy = "group")
   private List<GroupAvailability> availabilities;
@@ -35,4 +39,11 @@ public class Group {
 
   @OneToMany(mappedBy = "group")
   private List<GroupMessage> groupMessages;
+
+  public Group() {}
+
+  public Group(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
 }

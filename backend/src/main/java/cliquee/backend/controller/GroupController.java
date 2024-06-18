@@ -7,6 +7,7 @@ import cliquee.backend.model.GroupAvailability;
 import cliquee.backend.model.UserGroup;
 import cliquee.backend.service.GroupService;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,31 +42,31 @@ public class GroupController {
   }
 
   @GetMapping("/{id}")
-  public Group getGroupById(@PathVariable Long id) {
+  public Group getGroupById(@PathVariable UUID id) {
     return groupService.getGroupById(id);
   }
 
   @PutMapping("/{id}/update")
   public Group updateGroup(
-    @PathVariable Long id,
+    @PathVariable UUID id,
     @RequestBody Group groupDetails
   ) {
     return groupService.updateGroup(id, groupDetails);
   }
 
   @GetMapping("/{id}/availabilities")
-  public List<GroupAvailability> getGroupAvailabilities(@PathVariable Long id) {
+  public List<GroupAvailability> getGroupAvailabilities(@PathVariable UUID id) {
     return groupService.getGroupAvailabilities(id);
   }
 
   @GetMapping("/{id}/events")
-  public List<Event> getGroupEvents(@PathVariable Long id) {
+  public List<Event> getGroupEvents(@PathVariable UUID id) {
     return groupService.getGroupEvents(id);
   }
 
   @PostMapping("/{id}/events/create")
   public Event createGroupEvent(
-    @PathVariable Long id,
+    @PathVariable UUID id,
     @RequestBody Event event
   ) {
     return groupService.createGroupEvent(id, event);
@@ -73,16 +74,16 @@ public class GroupController {
 
   @GetMapping("/{id}/events/{event_id}")
   public Event getGroupEventById(
-    @PathVariable Long id,
-    @PathVariable Long event_id
+    @PathVariable UUID id,
+    @PathVariable UUID event_id
   ) {
     return groupService.getGroupEventById(id, event_id);
   }
 
   @PutMapping("/{id}/events/{event_id}/update")
   public Event updateGroupEvent(
-    @PathVariable Long id,
-    @PathVariable Long event_id,
+    @PathVariable UUID id,
+    @PathVariable UUID event_id,
     @RequestBody Event eventDetails
   ) {
     return groupService.updateGroupEvent(id, event_id, eventDetails);
@@ -90,8 +91,8 @@ public class GroupController {
 
   @DeleteMapping("/{id}/events/{event_id}/cancel")
   public ResponseEntity<?> cancelGroupEvent(
-    @PathVariable Long id,
-    @PathVariable Long event_id
+    @PathVariable UUID id,
+    @PathVariable UUID event_id
   ) {
     groupService.cancelGroupEvent(id, event_id);
     return ResponseEntity.ok().build();
@@ -99,29 +100,29 @@ public class GroupController {
 
   @GetMapping("/{id}/events/{event_id}/participants")
   public List<EventParticipant> getGroupEventParticipants(
-    @PathVariable Long id,
-    @PathVariable Long event_id
+    @PathVariable UUID id,
+    @PathVariable UUID event_id
   ) {
     return groupService.getGroupEventParticipants(id, event_id);
   }
 
   @GetMapping("/{id}/members")
-  public List<UserGroup> getGroupMembers(@PathVariable Long id) {
+  public List<UserGroup> getGroupMembers(@PathVariable UUID id) {
     return groupService.getGroupMembers(id);
   }
 
   @PutMapping("/{id}/members/{user_id}/add")
-  public UserGroup addgroupMember(
-    @PathVariable Long id,
-    @PathVariable Long user_id
+  public void addgroupMember(
+    @PathVariable UUID id,
+    @PathVariable UUID user_id
   ) {
-    return groupService.addGroupMember(id, user_id);
+    groupService.addGroupMember(id, user_id);
   }
 
   @DeleteMapping("/{id}/members/{user_id}/remove")
   public ResponseEntity<?> removeGroupMember(
-    @PathVariable Long id,
-    @PathVariable Long user_id
+    @PathVariable UUID id,
+    @PathVariable UUID user_id
   ) {
     groupService.removeGroupMember(id, user_id);
     return ResponseEntity.ok().build();
@@ -129,16 +130,16 @@ public class GroupController {
 
   @PostMapping("/{id}/members/{user_id}/promote")
   public UserGroup promoteGroupMember(
-    @PathVariable Long id,
-    @PathVariable Long user_id
+    @PathVariable UUID id,
+    @PathVariable UUID user_id
   ) {
     return groupService.promoteGroupMember(id, user_id);
   }
 
   @PostMapping("/{id}/members/{user_id}/demote")
   public UserGroup demoteGroupMember(
-    @PathVariable Long id,
-    @PathVariable Long user_id
+    @PathVariable UUID id,
+    @PathVariable UUID user_id
   ) {
     return groupService.demoteGroupMember(id, user_id);
   }

@@ -4,6 +4,7 @@ import cliquee.backend.model.Notification;
 import cliquee.backend.repository.NotificationRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,13 @@ public class NotificationService {
   @Autowired
   private FriendshipService friendshipService;
 
-  public List<Notification> getAllNotificationsForUser(Long userId) {
+  public List<Notification> getAllNotificationsForUser(UUID userId) {
     return notificationRepository.findAllById(userId);
   }
 
   public Optional<Notification> getNotification(
-    Long userId,
-    Long notificationId
+    UUID userId,
+    UUID notificationId
   ) {
     Optional<Notification> notification = notificationRepository.findByIdAndUserId(
       notificationId,
@@ -36,9 +37,9 @@ public class NotificationService {
   }
 
   public Notification respondToNotification(
-    Long userId,
-    Long notificationId,
-    Long relatedId,
+    UUID userId,
+    UUID notificationId,
+    UUID relatedId,
     String relatedType,
     String response
   ) {
@@ -70,8 +71,8 @@ public class NotificationService {
   }
 
   private void handleFriendRequestResponse(
-    Long userId,
-    Long relatedId,
+    UUID userId,
+    UUID relatedId,
     String response
   ) {
     switch (response.toUpperCase()) {
@@ -88,7 +89,7 @@ public class NotificationService {
     }
   }
 
-  public Notification markNotificationAsRead(Long userId, Long notificationId) {
+  public Notification markNotificationAsRead(UUID userId, UUID notificationId) {
     Optional<Notification> optionalNotification = notificationRepository.findByIdAndUserId(
       notificationId,
       userId

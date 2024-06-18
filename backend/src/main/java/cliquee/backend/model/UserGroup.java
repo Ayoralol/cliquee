@@ -17,18 +17,44 @@ import lombok.Data;
 public class UserGroup {
 
   @EmbeddedId
-  private UserGroupId id;
+  private UserGroupId id = new UserGroupId();
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("user_id")
+  @MapsId("userId")
   @JoinColumn(name = "user_id")
-  private Long userId;
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("group_id")
+  @MapsId("groupId")
   @JoinColumn(name = "group_id")
-  private Long groupId;
+  private Group group;
 
   private String role;
   private LocalDateTime joined_at = LocalDateTime.now();
+
+  public void setUser(User user) {
+    this.user = user;
+    this.id.setUserId(user.getId());
+  }
+
+  public void setGroup(Group group) {
+    this.group = group;
+    this.id.setGroupId(group.getId());
+  }
+
+  public UserGroup() {}
+
+  public UserGroup(User user, Group group, String role) {
+    this.id = new UserGroupId(user.getId(), group.getId());
+    this.user = user;
+    this.group = group;
+    this.role = role;
+  }
+
+  public UserGroup(UserGroupId id, User user, Group group, String role) {
+    this.id = id;
+    this.setUser(user);
+    this.setGroup(group);
+    this.role = role;
+  }
 }

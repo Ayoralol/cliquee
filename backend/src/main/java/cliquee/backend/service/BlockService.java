@@ -5,6 +5,7 @@ import cliquee.backend.model.embedded.BlockId;
 import cliquee.backend.repository.BlockRepository;
 import cliquee.backend.repository.UserRepository;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class BlockService {
   @Autowired
   private UserRepository userRepository;
 
-  public Block blockUser(Long userId, Long blockedId) {
+  public Block blockUser(UUID userId, UUID blockedId) {
     if (
       userRepository.existsById(userId) && userRepository.existsById(blockedId)
     ) {
@@ -29,7 +30,7 @@ public class BlockService {
     }
   }
 
-  public void unblockUser(Long userId, Long blockedId) {
+  public void unblockUser(UUID userId, UUID blockedId) {
     BlockId blockId = new BlockId(userId, blockedId);
     if (blockRepository.existsById(blockId)) {
       blockRepository.deleteById(blockId);
@@ -38,7 +39,7 @@ public class BlockService {
     }
   }
 
-  public List<Block> getBlockedUsers(Long userId) {
+  public List<Block> getBlockedUsers(UUID userId) {
     return blockRepository.findByBlockerId(userId);
   }
 }

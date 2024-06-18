@@ -9,6 +9,7 @@ import cliquee.backend.repository.FriendshipRepository;
 import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,11 @@ public class FriendshipService {
   @Autowired
   private UserRepository userRepository;
 
-  public List<Friendship> getAllFriendships(Long userId) {
+  public List<Friendship> getAllFriendships(UUID userId) {
     return friendshipRepository.findAllFriendshipsByUser_Id(userId);
   }
 
-  public List<Long> getFriendIds(Long userId) {
+  public List<UUID> getFriendIds(UUID userId) {
     List<Friendship> friendships = friendshipRepository.findAllFriendshipsByUser_Id(
       userId
     );
@@ -45,7 +46,7 @@ public class FriendshipService {
       .collect(Collectors.toList());
   }
 
-  public FriendRequest sendFriendRequest(Long userId, Long friendId) {
+  public FriendRequest sendFriendRequest(UUID userId, UUID friendId) {
     Optional<User> user = userRepository.findById(userId);
     Optional<User> friend = userRepository.findById(friendId);
 
@@ -60,11 +61,11 @@ public class FriendshipService {
     }
   }
 
-  public List<FriendRequest> getFriendRequests(Long userId) {
+  public List<FriendRequest> getFriendRequests(UUID userId) {
     return friendRequestRepository.findByReceiverId(userId);
   }
 
-  public FriendRequest acceptFriendRequest(Long userId, Long requestId) {
+  public FriendRequest acceptFriendRequest(UUID userId, UUID requestId) {
     Optional<FriendRequest> optionalFriendRequest = friendRequestRepository.findById(
       requestId
     );
@@ -97,7 +98,7 @@ public class FriendshipService {
     }
   }
 
-  public FriendRequest denyFriendRequest(Long userId, Long requestId) {
+  public FriendRequest denyFriendRequest(UUID userId, UUID requestId) {
     Optional<FriendRequest> optionalFriendRequest = friendRequestRepository.findById(
       requestId
     );

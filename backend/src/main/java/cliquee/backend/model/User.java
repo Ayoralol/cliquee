@@ -2,14 +2,16 @@ package cliquee.backend.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 
 @Data
 @Entity
@@ -17,8 +19,9 @@ import lombok.Data;
 public class User {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @UuidGenerator
+  @Column(updatable = false, nullable = false)
+  private UUID id;
 
   @Column(unique = true)
   private String username;
@@ -41,7 +44,7 @@ public class User {
   private List<Block> blockingUsers;
 
   @OneToMany(mappedBy = "user")
-  private List<UserGroup> userGroups;
+  private Set<UserGroup> userGroups = new HashSet<>();
 
   @OneToMany(mappedBy = "user")
   private List<GroupAvailability> groupAvailabilities;
@@ -81,4 +84,36 @@ public class User {
 
   @OneToMany(mappedBy = "friend2")
   private List<Friendship> friend2;
+
+  public User() {}
+
+  public User(
+    String username,
+    String email,
+    String password,
+    String firstName,
+    String lastName
+  ) {
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.first_name = firstName;
+    this.last_name = lastName;
+  }
+
+  public User(
+    String username,
+    String email,
+    String password,
+    String first_name,
+    String last_name,
+    String role
+  ) {
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.role = role;
+  }
 }

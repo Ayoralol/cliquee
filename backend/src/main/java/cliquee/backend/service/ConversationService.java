@@ -10,6 +10,7 @@ import cliquee.backend.repository.MessageRepository;
 import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,28 +29,28 @@ public class ConversationService {
   @Autowired
   private UserRepository userRepository;
 
-  public List<Conversation> getAllConversations(Long userId) {
+  public List<Conversation> getAllConversations(UUID userId) {
     return conversationRepository.findAllByUserId(userId);
   }
 
   public Optional<Conversation> getConversation(
-    Long conversationId,
-    Long userId
+    UUID conversationId,
+    UUID userId
   ) {
     return conversationRepository.findByIdAndUserId(conversationId, userId);
   }
 
-  public List<Message> getMessages(Long conversationId) {
+  public List<Message> getMessages(UUID conversationId) {
     return messageRepository.findAllByConversation_Id(conversationId);
   }
 
-  public List<GroupMessage> getGroupMessages(Long groupId) {
+  public List<GroupMessage> getGroupMessages(UUID groupId) {
     return groupMessageRepository.findAllByGroup_Id(groupId);
   }
 
   public Message sendMessage(
-    Long conversationId,
-    Long senderId,
+    UUID conversationId,
+    UUID senderId,
     String messageText
   ) {
     Message message = new Message();
@@ -60,8 +61,8 @@ public class ConversationService {
   }
 
   public GroupMessage sendGroupMessage(
-    Long groupId,
-    Long senderId,
+    UUID groupId,
+    UUID senderId,
     String messageText
   ) {
     GroupMessage groupMessage = new GroupMessage();
@@ -71,7 +72,7 @@ public class ConversationService {
     return groupMessageRepository.save(groupMessage);
   }
 
-  public Conversation createConversation(Long user1Id, Long user2Id) {
+  public Conversation createConversation(UUID user1Id, UUID user2Id) {
     Optional<User> user1 = userRepository.findById(user1Id);
     Optional<User> user2 = userRepository.findById(user2Id);
 

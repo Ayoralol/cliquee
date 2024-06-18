@@ -4,6 +4,7 @@ import cliquee.backend.model.Notification;
 import cliquee.backend.service.NotificationService;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class NotificationController {
 
   @GetMapping("/{id}")
   public ResponseEntity<List<Notification>> getAllNotifications(
-    @PathVariable Long id
+    @PathVariable UUID id
   ) {
     List<Notification> notifications = notificationService.getAllNotificationsForUser(
       id
@@ -32,8 +33,8 @@ public class NotificationController {
 
   @GetMapping("/{id}/{notification_id}")
   public ResponseEntity<Notification> getNotification(
-    @PathVariable Long id,
-    @PathVariable Long notificationId
+    @PathVariable UUID id,
+    @PathVariable UUID notificationId
   ) {
     Optional<Notification> notification = notificationService.getNotification(
       id,
@@ -46,9 +47,9 @@ public class NotificationController {
 
   @PostMapping("/{id}/{notification_id}/respond")
   public ResponseEntity<Notification> respondToNotification(
-    @PathVariable Long id,
-    @PathVariable Long notificationId,
-    @RequestBody Long relatedId,
+    @PathVariable UUID id,
+    @PathVariable UUID notificationId,
+    @RequestBody UUID relatedId,
     @RequestBody String relatedType,
     @RequestBody String response
   ) {
@@ -68,8 +69,8 @@ public class NotificationController {
 
   @PostMapping("/{id}/{notification_id}/read")
   public ResponseEntity<Notification> markNotificationAsRead(
-    @PathVariable Long id,
-    @PathVariable Long notificationId
+    @PathVariable UUID id,
+    @PathVariable UUID notificationId
   ) {
     try {
       Notification notification = notificationService.markNotificationAsRead(

@@ -6,6 +6,7 @@ import cliquee.backend.service.BlockService;
 import cliquee.backend.service.UserService;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +29,14 @@ public class UserController {
   private BlockService blockService;
 
   @GetMapping("/{id}/all")
-  public List<User> getAllUsers(@PathVariable Long id) {
+  public List<User> getAllUsers(@PathVariable UUID id) {
     return userService.getAllUsers(id);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<User> getUserById(
-    @PathVariable Long id,
-    @RequestParam Long currentUserId
+    @PathVariable UUID id,
+    @RequestParam UUID currentUserId
   ) {
     Optional<User> user = userService.getUserById(id, currentUserId);
     return user
@@ -46,7 +47,7 @@ public class UserController {
   @GetMapping("/username/{username}")
   public ResponseEntity<User> getUserByUsername(
     @PathVariable String username,
-    @RequestParam Long currentUserId
+    @RequestParam UUID currentUserId
   ) {
     Optional<User> user = userService.getUserByUsername(
       username,
@@ -60,7 +61,7 @@ public class UserController {
   @GetMapping("/email/{email}")
   public ResponseEntity<User> getUserByEmail(
     @PathVariable String email,
-    @RequestParam Long currentUserId
+    @RequestParam UUID currentUserId
   ) {
     Optional<User> user = userService.getUserByEmail(email, currentUserId);
     return user
@@ -71,7 +72,7 @@ public class UserController {
   @GetMapping("/search/{keyword}")
   public ResponseEntity<List<User>> searchUsers(
     @PathVariable String keyword,
-    @RequestParam Long currentUserId
+    @RequestParam UUID currentUserId
   ) {
     List<User> users = userService.searchUsers(keyword, currentUserId);
     return ResponseEntity.ok(users);
@@ -79,7 +80,7 @@ public class UserController {
 
   @PutMapping("/{id}/update")
   public ResponseEntity<User> updateUser(
-    @PathVariable Long id,
+    @PathVariable UUID id,
     @RequestBody User userDetails
   ) {
     User user = userService.updateUser(id, userDetails);
@@ -93,14 +94,14 @@ public class UserController {
   }
 
   @PostMapping("/{id}/delete")
-  public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+  public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
     userService.deleteUser(id);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/{id}/change-password")
   public ResponseEntity<?> changePassword(
-    @PathVariable Long id,
+    @PathVariable UUID id,
     @RequestBody String newPassword
   ) {
     userService.changePassword(id, newPassword);
@@ -109,8 +110,8 @@ public class UserController {
 
   @PostMapping("/{id}/block/{blocked_id}")
   public ResponseEntity<Block> blockUser(
-    @PathVariable Long id,
-    @PathVariable Long blockedId
+    @PathVariable UUID id,
+    @PathVariable UUID blockedId
   ) {
     try {
       Block block = blockService.blockUser(id, blockedId);
@@ -122,8 +123,8 @@ public class UserController {
 
   @PostMapping("/{id}/unblock/{blocked_id}")
   public ResponseEntity<Void> unblockUser(
-    @PathVariable Long id,
-    @PathVariable Long blockedId
+    @PathVariable UUID id,
+    @PathVariable UUID blockedId
   ) {
     try {
       blockService.unblockUser(id, blockedId);
@@ -134,7 +135,7 @@ public class UserController {
   }
 
   @GetMapping("/{id}/blocked")
-  public ResponseEntity<List<Block>> getBlockedUsers(@PathVariable Long id) {
+  public ResponseEntity<List<Block>> getBlockedUsers(@PathVariable UUID id) {
     List<Block> blockedUsers = blockService.getBlockedUsers(id);
     return ResponseEntity.ok(blockedUsers);
   }

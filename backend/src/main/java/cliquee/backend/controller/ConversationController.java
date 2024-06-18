@@ -6,6 +6,7 @@ import cliquee.backend.model.Message;
 import cliquee.backend.service.ConversationService;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class ConversationController {
 
   @GetMapping("/{id}")
   public ResponseEntity<List<Conversation>> getAllConversations(
-    @PathVariable Long id
+    @PathVariable UUID id
   ) {
     List<Conversation> conversation = conversationService.getAllConversations(
       id
@@ -35,8 +36,8 @@ public class ConversationController {
 
   @GetMapping("/{id}/{conversation_id}")
   public ResponseEntity<Conversation> getConversation(
-    @PathVariable Long id,
-    @PathVariable Long conversationId
+    @PathVariable UUID id,
+    @PathVariable UUID conversationId
   ) {
     Optional<Conversation> conversation = conversationService.getConversation(
       id,
@@ -49,21 +50,21 @@ public class ConversationController {
 
   @GetMapping("/{id}/{conversation_id}/messages")
   public ResponseEntity<List<Message>> getMessages(
-    @PathVariable Long conversationId
+    @PathVariable UUID conversationId
   ) {
     List<Message> message = conversationService.getMessages(conversationId);
     return ResponseEntity.ok(message);
   }
 
   @GetMapping("/group/{group_id}")
-  public List<GroupMessage> getGroupMessages(@PathVariable Long groupId) {
+  public List<GroupMessage> getGroupMessages(@PathVariable UUID groupId) {
     return conversationService.getGroupMessages(groupId);
   }
 
   @PostMapping("/{id}/{conversation_id}/send")
   public ResponseEntity<Message> sendMessage(
-    @PathVariable Long id,
-    @PathVariable Long conversationId,
+    @PathVariable UUID id,
+    @PathVariable UUID conversationId,
     @RequestBody String messageText
   ) {
     Message message = conversationService.sendMessage(
@@ -76,8 +77,8 @@ public class ConversationController {
 
   @PostMapping("/group/{groupId}/send")
   public GroupMessage sendGroupMessage(
-    @RequestParam Long userId,
-    @PathVariable Long groupId,
+    @RequestParam UUID userId,
+    @PathVariable UUID groupId,
     @RequestParam String messageContent
   ) {
     return conversationService.sendGroupMessage(
@@ -89,8 +90,8 @@ public class ConversationController {
 
   @PostMapping("/{user1Id}/create")
   public ResponseEntity<Conversation> createConversation(
-    @PathVariable Long user1Id,
-    @RequestParam Long user2Id
+    @PathVariable UUID user1Id,
+    @RequestParam UUID user2Id
   ) {
     try {
       Conversation conversation = conversationService.createConversation(
