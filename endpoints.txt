@@ -4,6 +4,7 @@
 * /groups/{id} - GET - Specific group details
 * /groups/{id}/update - PUT - Edit group details (Group admin only)
 * /groups/{id}/availabilities - GET - Available dates in the group - can redirect to /groups/{id}/events/create from here
+* /groups/{id}/availabilities/create
 * /groups/{id}/events - GET - Organized events in the group
 * /groups/{id}/events/create - POST - Create a new event in the group
 * /groups/{id}/events/{event_id} - GET - Specific event details

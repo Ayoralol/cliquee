@@ -25,11 +25,59 @@ public class DatabaseSeeder implements ApplicationRunner {
   @Autowired
   private UserGroupRepository userGroupRepository;
 
+  // @Autowired
+  // private AuditLogRepository auditLogRepository;
+
+  // @Autowired
+  // private BlockRepository blockRepository;
+
+  // @Autowired
+  // private ConversationRepository conversationRepository;
+
+  // @Autowired
+  // private EventCommentRepository eventCommentRepository;
+
+  // @Autowired
+  // private EventParticipantRepository eventParticipantRepository;
+
+  // @Autowired
+  // private EventRepository eventRepository;
+
+  // @Autowired
+  // private FriendRequestRepository friendRequestRepository;
+
+  // @Autowired
+  // private FriendshipRepository friendshipRepository;
+
+  // @Autowired
+  // private GroupAvailabilityRepository groupAvailabilityRepository;
+
+  // @Autowired
+  // private GroupMessageRepository groupMessageRepository;
+
+  // @Autowired
+  // private MessageRepository messageRepository;
+
+  // @Autowired
+  // private NotificationRepository notificationRepository;
+
   @Override
   public void run(ApplicationArguments args) throws Exception {
     seedUsersTable();
     seedGroupsTable();
     seedUserGroupsTable();
+    // seedGroupAvailabilitiesTable();
+    // seedEventsTable();
+    // seedEventParticipantsTable();
+    // seedEventCommentsTable();
+    // seedConversationsTable();
+    // seedMessagesTable();
+    // seedGroupMessagesTable();
+    // seedFriendshipsTable();
+    // seedFriendRequestsTable();
+    // seedNotificationsTable();
+    // seedBlocksTable();
+    // seedAuditLogsTable();
   }
 
   private void seedUsersTable() {
@@ -117,21 +165,21 @@ public class DatabaseSeeder implements ApplicationRunner {
           "ADMIN"
         ),
         new UserGroup(
-          new UserGroupId(user2.getId(), group1.getId()),
+          new UserGroupId(user2.getId(), group2.getId()),
           user2,
-          group1,
+          group2,
           "ADMIN"
         ),
         new UserGroup(
-          new UserGroupId(user3.getId(), group1.getId()),
+          new UserGroupId(user3.getId(), group3.getId()),
           user3,
-          group1,
+          group3,
           "ADMIN"
         ),
         new UserGroup(
-          new UserGroupId(user4.getId(), group1.getId()),
+          new UserGroupId(user4.getId(), group4.getId()),
           user4,
-          group1,
+          group4,
           "ADMIN"
         ),
         new UserGroup(

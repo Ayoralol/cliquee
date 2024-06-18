@@ -9,6 +9,7 @@ import cliquee.backend.service.GroupService;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +27,12 @@ public class GroupController {
   @Autowired
   private GroupService groupService;
 
-  @GetMapping("/all")
-  public List<Group> getAllGroups() {
-    return groupService.getAllGroups();
+  @GetMapping("/all/{userId}")
+  public ResponseEntity<List<Group>> getAllGroupsByUserId(
+    @PathVariable UUID userId
+  ) {
+    List<Group> groups = groupService.getGroupsByUserId(userId);
+    return ResponseEntity.ok(groups);
   }
 
   @PostMapping("/create")
@@ -57,6 +61,18 @@ public class GroupController {
   @GetMapping("/{id}/availabilities")
   public List<GroupAvailability> getGroupAvailabilities(@PathVariable UUID id) {
     return groupService.getGroupAvailabilities(id);
+  }
+
+  @PostMapping("/{id}/availabilities/create")
+  public ResponseEntity<GroupAvailability> createGroupAvailability(
+    @PathVariable UUID id,
+    @RequestBody GroupAvailability availability
+  ) {
+    GroupAvailability newAvailability = groupService.createGroupAvailability(
+      id,
+      availability
+    );
+    return ResponseEntity.status(HttpStatus.CREATED).body(newAvailability);
   }
 
   @GetMapping("/{id}/events")

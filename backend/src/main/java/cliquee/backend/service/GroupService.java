@@ -16,6 +16,7 @@ import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +41,12 @@ public class GroupService {
   @Autowired
   private UserRepository userRepository;
 
-  public List<Group> getAllGroups() {
-    return groupRepository.findAll();
+  public List<Group> getGroupsByUserId(UUID userId) {
+    List<UserGroup> userGroups = userGroupRepository.findByUserId(userId);
+    return userGroups
+      .stream()
+      .map(UserGroup::getGroup)
+      .collect(Collectors.toList());
   }
 
   public Group createGroup(Group group) {
@@ -183,5 +188,16 @@ public class GroupService {
       );
     userGroup.setRole("MEMBER");
     return userGroupRepository.save(userGroup);
+  }
+
+  public GroupAvailability createGroupAvailability(
+    UUID groupId,
+    GroupAvailability availability
+  ) {
+    Group group = groupRepository
+      .findById(groupId)
+      .orElseThrow(() -> new ResourceNotFoundException("Group not found"));
+    availability.setGroup(group);
+    return groupAvailabilityRepository.save(availability);
   }
 }

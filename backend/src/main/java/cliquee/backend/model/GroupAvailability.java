@@ -34,4 +34,18 @@ public class GroupAvailability {
   private LocalDateTime end_time;
   private LocalDateTime created_at = LocalDateTime.now();
   private LocalDateTime updated_at = LocalDateTime.now();
+
+  public GroupAvailability() {}
+
+  public GroupAvailability(
+    Group group,
+    User user,
+    LocalDateTime start_time,
+    LocalDateTime end_time
+  ) {
+    this.group = group;
+    this.user = user;
+    this.start_time = start_time;
+    this.end_time = end_time;
+  }
 }

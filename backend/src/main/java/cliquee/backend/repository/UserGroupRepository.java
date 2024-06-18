@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserGroupRepository
   extends JpaRepository<UserGroup, UserGroupId> {
+  List<UserGroup> findByUserId(UUID userId);
   List<UserGroup> findByGroupId(UUID groupId);
   Optional<UserGroup> findByGroupIdAndUserId(UUID groupId, UUID userId);
 }
