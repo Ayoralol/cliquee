@@ -49,10 +49,10 @@
 * /conversations/{user1Id}/create - POST - Create a conversation
 /conversations/{id}/group/create - NOT NEEDED EXACTLY BUT HERE TO REMIND ME WHEN I MAKE GROUPS
 
-/admin/users - GET - List all users (Admin only)
-/admin/groups - GET - List all groups (Admin only)
-/admin/logs - GET - View logs (Admin only)
-/admin/logs/clear - DELETE - endpoint to clear the logs if ever necessary
+* /admin/users - GET - List all users (Admin only)
+* /admin/groups - GET - List all groups (Admin only)
+* /admin/logs - GET - View logs (Admin only)
+* /admin/logs/clear - DELETE - endpoint to clear the logs if ever necessary
 
 
 --

@@ -26,8 +26,11 @@ public class SecurityConfig {
           .anyRequest()
           .authenticated()
       )
-      .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
-      .logout(logout -> logout.permitAll());
+      .formLogin(formLogin ->
+        formLogin.loginPage("/login").defaultSuccessUrl("/", true).permitAll()
+      )
+      .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
+      .csrf(csrf -> csrf.disable()); // Enable CSRF in production
     return http.build();
   }
 
