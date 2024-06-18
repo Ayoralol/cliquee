@@ -55,15 +55,9 @@ public class ConversationController {
     return ResponseEntity.ok(message);
   }
 
-  @GetMapping("/{id}/group/{group_id}")
-  public ResponseEntity<List<GroupMessage>> getGroupMessages(
-    @PathVariable Long id,
-    @PathVariable Long groupId
-  ) {
-    List<GroupMessage> groupMessage = conversationService.getGroupMessages(
-      groupId
-    );
-    return ResponseEntity.ok(groupMessage);
+  @GetMapping("/group/{group_id}")
+  public List<GroupMessage> getGroupMessages(@PathVariable Long groupId) {
+    return conversationService.getGroupMessages(groupId);
   }
 
   @PostMapping("/{id}/{conversation_id}/send")
@@ -80,18 +74,17 @@ public class ConversationController {
     return ResponseEntity.ok(message);
   }
 
-  @PostMapping("/{id}/group/{group_id}/send")
-  public ResponseEntity<GroupMessage> sendGroupMessage(
-    @PathVariable Long id,
-    @PathVariable Long group_id,
-    @RequestBody String messageText
+  @PostMapping("/group/{groupId}/send")
+  public GroupMessage sendGroupMessage(
+    @RequestParam Long userId,
+    @PathVariable Long groupId,
+    @RequestParam String messageContent
   ) {
-    GroupMessage groupMessage = conversationService.sendGroupMessage(
-      group_id,
-      id,
-      messageText
+    return conversationService.sendGroupMessage(
+      userId,
+      groupId,
+      messageContent
     );
-    return ResponseEntity.ok(groupMessage);
   }
 
   @PostMapping("/{user1Id}/create")

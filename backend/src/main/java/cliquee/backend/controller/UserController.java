@@ -68,12 +68,12 @@ public class UserController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  @GetMapping("/search")
+  @GetMapping("/search/{keyword}")
   public ResponseEntity<List<User>> searchUsers(
-    @RequestParam String username,
+    @PathVariable String keyword,
     @RequestParam Long currentUserId
   ) {
-    List<User> users = userService.searchUsers(username, currentUserId);
+    List<User> users = userService.searchUsers(keyword, currentUserId);
     return ResponseEntity.ok(users);
   }
 

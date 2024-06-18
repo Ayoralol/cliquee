@@ -22,12 +22,12 @@ public class UserGroup {
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("user_id")
   @JoinColumn(name = "user_id")
-  private User user;
+  private Long userId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("group_id")
   @JoinColumn(name = "group_id")
-  private Group group;
+  private Long groupId;
 
   private String role;
   private LocalDateTime joined_at = LocalDateTime.now();

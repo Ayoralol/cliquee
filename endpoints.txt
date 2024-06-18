@@ -1,29 +1,26 @@
-/login - GET - Login page
-/register - POST - User registration page
-
-/groups - GET - List of groups
-/groups/create - POST - Create a new group
-/groups/search - GET - Search for groups the user is a part of
-/groups/{id} - GET - Specific group details
-/groups/{id}/edit - PUT - Edit group details (Group admin only)
-/groups/{id}/availabilities - GET - Available dates in the group - can redirect to /groups/{id}/events/create from here
-/groups/{id}/events - GET - Organized events in the group
-/groups/{id}/events/create - POST - Create a new event in the group
-/groups/{id}/events/{event_id} - GET - Specific event details
-/groups/{id}/events/{event_id}/edit - PUT - Edit event details
-/groups/{id}/events/{event_id}/cancel - DELETE - Cancel an event
-/groups/{id}/events/{event_id}/attendees - GET - Endpoint fetches attending list for an event
-/groups/{id}/members - GET - List of group members
-/groups/{id}/members/{user-id}/add-member - POST - add a new member to the group
-/groups/{id}/members/{user-id}/remove-member - DELETE - Remove a member from the group
-/groups/{id}/members/{user_id}/promote - POST - Promote a group member to Group Admin
-/groups/{id}/members/{user_id}/demote - POST - Demote a group admin to group member
+* /groups/all - GET - List of groups
+* /groups/create - POST - Create a new group
+* /groups/search/{keyword} - GET - Search for groups the user is a part of
+* /groups/{id} - GET - Specific group details
+* /groups/{id}/update - PUT - Edit group details (Group admin only)
+* /groups/{id}/availabilities - GET - Available dates in the group - can redirect to /groups/{id}/events/create from here
+* /groups/{id}/events - GET - Organized events in the group
+* /groups/{id}/events/create - POST - Create a new event in the group
+* /groups/{id}/events/{event_id} - GET - Specific event details
+* /groups/{id}/events/{event_id}/update - PUT - Edit event details
+* /groups/{id}/events/{event_id}/cancel - DELETE - Cancel an event
+* /groups/{id}/events/{event_id}/attendees - GET - Endpoint fetches attending list for an event
+* /groups/{id}/members - GET - List of group members
+* /groups/{id}/members/{user-id}/add-member - POST - add a new member to the group
+* /groups/{id}/members/{user-id}/remove-member - DELETE - Remove a member from the group
+* /groups/{id}/members/{user_id}/promote - POST - Promote a group member to Group Admin
+* /groups/{id}/members/{user_id}/demote - POST - Demote a group admin to group member
 
 * /users/{id}/all - GET - Get all users
 * /users/{id} - GET - A user’s profile by Id
 * /users/username/{username} - GET - Get profile with username
 * /users/email/{email} - GET - get profile with email
-* /users/search - GET - Search for users
+* /users/search/{keyword} - GET - Search for users
 * /users/{id}/update - PUT - Edit user profile (accessible to the user and Admin)
 * /users/create - POST - Create a user
 * /users/{id}/delete - POST - Delete the user
@@ -47,7 +44,6 @@
 * /conversations/{id}/{conversation_id}/send - POST - send a message
 * /conversations/{id}/group/{group_id}/send - POST - send a group message
 * /conversations/{user1Id}/create - POST - Create a conversation
-/conversations/{id}/group/create - NOT NEEDED EXACTLY BUT HERE TO REMIND ME WHEN I MAKE GROUPS
 
 * /admin/users - GET - List all users (Admin only)
 * /admin/groups - GET - List all groups (Admin only)
