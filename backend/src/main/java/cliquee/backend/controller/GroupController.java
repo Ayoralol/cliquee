@@ -27,11 +27,11 @@ public class GroupController {
   @Autowired
   private GroupService groupService;
 
-  @GetMapping("/all/{userId}")
+  @GetMapping("/all/{user_id}")
   public ResponseEntity<List<Group>> getAllGroupsByUserId(
-    @PathVariable UUID userId
+    @PathVariable UUID user_id
   ) {
-    List<Group> groups = groupService.getGroupsByUserId(userId);
+    List<Group> groups = groupService.getGroupsByUserId(user_id);
     return ResponseEntity.ok(groups);
   }
 

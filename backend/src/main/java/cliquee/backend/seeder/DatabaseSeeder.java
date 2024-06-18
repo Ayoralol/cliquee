@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -61,6 +62,9 @@ public class DatabaseSeeder implements ApplicationRunner {
   // @Autowired
   // private NotificationRepository notificationRepository;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   @Override
   public void run(ApplicationArguments args) throws Exception {
     seedUsersTable();
@@ -82,38 +86,36 @@ public class DatabaseSeeder implements ApplicationRunner {
 
   private void seedUsersTable() {
     if (userRepository.count() == 0) {
-      List<User> users = List.of(
-        new User(
-          "ADMIN",
-          "admin@hotmail.com",
-          "password1234",
-          "FirstName",
-          "LastName",
-          "ADMIN"
-        ),
-        new User(
-          "Bro De Rick",
-          "b_rick@gmail.com",
-          "password1234",
-          "Broderick",
-          "Plant"
-        ),
-        new User(
-          "Jentails",
-          "jennytails@gmail.com",
-          "password1234",
-          "Jenny",
-          "Tails"
-        ),
-        new User(
-          "Mister",
-          "misterblister@outlook.com",
-          "password1234",
-          "Mister",
-          "Blister"
-        )
-      );
-      userRepository.saveAll(users);
+      User user1 = new User();
+      user1.setUsername("ADMIN");
+      user1.setEmail("admin@hotmail.com");
+      user1.setPassword(passwordEncoder.encode("password1234"));
+      user1.setFirst_name("FirstName");
+      user1.setLast_name("LastName");
+      user1.setRole("ADMIN");
+
+      User user2 = new User();
+      user2.setUsername("Bro De Rick");
+      user2.setEmail("b_rick@gmail.com");
+      user2.setPassword(passwordEncoder.encode("password1234"));
+      user2.setFirst_name("Broderick");
+      user2.setLast_name("Plant");
+
+      User user3 = new User();
+      user3.setUsername("Jentails");
+      user3.setEmail("jennytails@gmail.com");
+      user3.setPassword(passwordEncoder.encode("password1234"));
+      user3.setFirst_name("Jenny");
+      user3.setLast_name("Tails");
+
+      User user4 = new User();
+      user4.setUsername("Mister");
+      user4.setEmail("misterblister@outlook.com");
+      user4.setPassword(passwordEncoder.encode("password1234"));
+      user4.setFirst_name("Mister");
+      user4.setLast_name("Blister");
+
+      userRepository.saveAll(List.of(user1, user2, user3, user4));
     }
   }
 
