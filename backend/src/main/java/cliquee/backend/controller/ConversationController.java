@@ -24,83 +24,90 @@ public class ConversationController {
   @Autowired
   private ConversationService conversationService;
 
-  @GetMapping("/{id}")
+  @GetMapping("/{currentUserId}/all")
   public ResponseEntity<List<Conversation>> getAllConversations(
-    @PathVariable UUID id
+    @PathVariable UUID currentUserId
   ) {
     List<Conversation> conversation = conversationService.getAllConversations(
-      id
+      currentUserId
     );
     return ResponseEntity.ok(conversation);
   }
 
-  @GetMapping("/{id}/{conversation_id}")
+  @GetMapping("/{conversationId}")
   public ResponseEntity<Conversation> getConversation(
-    @PathVariable UUID id,
-    @PathVariable UUID conversationId
+    @PathVariable UUID conversationId,
+    @PathVariable UUID currentUserId
   ) {
     Optional<Conversation> conversation = conversationService.getConversation(
-      id,
-      conversationId
+      conversationId,
+      currentUserId
     );
     return conversation
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  @GetMapping("/{id}/{conversation_id}/messages")
-  public ResponseEntity<List<Message>> getMessages(
-    @PathVariable UUID conversationId
-  ) {
-    List<Message> message = conversationService.getMessages(conversationId);
-    return ResponseEntity.ok(message);
-  }
-
-  @GetMapping("/group/{group_id}")
-  public List<GroupMessage> getGroupMessages(@PathVariable UUID groupId) {
-    return conversationService.getGroupMessages(groupId);
-  }
-
-  @PostMapping("/{id}/{conversation_id}/send")
-  public ResponseEntity<Message> sendMessage(
-    @PathVariable UUID id,
-    @PathVariable UUID conversationId,
-    @RequestBody String messageText
-  ) {
-    Message message = conversationService.sendMessage(
-      conversationId,
-      id,
-      messageText
-    );
-    return ResponseEntity.ok(message);
-  }
-
-  @PostMapping("/group/{groupId}/send")
-  public GroupMessage sendGroupMessage(
-    @RequestParam UUID userId,
-    @PathVariable UUID groupId,
-    @RequestParam String messageContent
-  ) {
-    return conversationService.sendGroupMessage(
-      userId,
-      groupId,
-      messageContent
-    );
-  }
-
-  @PostMapping("/{user1Id}/create")
+  @PostMapping("/create/{friendId}")
   public ResponseEntity<Conversation> createConversation(
-    @PathVariable UUID user1Id,
-    @RequestParam UUID user2Id
+    @PathVariable UUID friendId,
+    @RequestParam UUID currentUserId
   ) {
     try {
       Conversation conversation = conversationService.createConversation(
-        user1Id,
-        user2Id
+        friendId,
+        currentUserId
       );
       return ResponseEntity.ok(conversation);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(null);
     }
+  }
+
+  @GetMapping("/{conversationId}/messages")
+  public ResponseEntity<List<Message>> getMessages(
+    @PathVariable UUID conversationId,
+    @RequestParam UUID currentUserId
+  ) {
+    List<Message> message = conversationService.getMessages(
+      conversationId,
+      currentUserId
+    );
+    return ResponseEntity.ok(message);
+  }
+
+  @PostMapping("/{conversationId}/send")
+  public ResponseEntity<Message> sendMessage(
+    @PathVariable UUID conversationId,
+    @RequestParam UUID currentUserId,
+    @RequestBody String messageText
+  ) {
+    Message message = conversationService.sendMessage(
+      conversationId,
+      currentUserId,
+      messageText
+    );
+    return ResponseEntity.ok(message);
+  }
+
+  @GetMapping("/group/{groupId}")
+  public List<GroupMessage> getGroupMessages(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId
+  ) {
+    return conversationService.getGroupMessages(groupId, currentUserId);
+  }
+
+  @PostMapping("/group/{groupId}/send")
+  public GroupMessage sendGroupMessage(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId,
+    @RequestParam String messageContent
+  ) {
+    return conversationService.sendGroupMessage(
+      groupId,
+      currentUserId,
+      messageContent
+    );
   }
 }

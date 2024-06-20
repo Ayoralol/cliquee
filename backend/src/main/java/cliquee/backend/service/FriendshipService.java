@@ -26,6 +26,9 @@ public class FriendshipService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private NotificationService notificationService;
+
   public List<Friendship> getAllFriendships(UUID userId) {
     return friendshipRepository.findAllFriendshipsByUser_Id(userId);
   }
@@ -46,7 +49,7 @@ public class FriendshipService {
       .collect(Collectors.toList());
   }
 
-  public FriendRequest sendFriendRequest(UUID userId, UUID friendId) {
+  public FriendRequest sendFriendRequest(UUID friendId, UUID userId) {
     Optional<User> user = userRepository.findById(userId);
     Optional<User> friend = userRepository.findById(friendId);
 
@@ -55,7 +58,18 @@ public class FriendshipService {
       friendRequest.setSender(user.get());
       friendRequest.setReceiver(friend.get());
       friendRequest.setStatus("PENDING");
-      return friendRequestRepository.save(friendRequest);
+      friendRequestRepository.save(friendRequest);
+
+      notificationService.createNotification(
+        friendId,
+        userId,
+        "FRIEND_REQUEST",
+        friendRequest.getId(),
+        "You have received a friend request from " +
+        user.get().getUsername() +
+        "."
+      );
+      return friendRequest;
     } else {
       throw new IllegalArgumentException("User or Friend not found");
     }
@@ -65,7 +79,7 @@ public class FriendshipService {
     return friendRequestRepository.findByReceiverId(userId);
   }
 
-  public FriendRequest acceptFriendRequest(UUID userId, UUID requestId) {
+  public FriendRequest acceptFriendRequest(UUID requestId, UUID userId) {
     Optional<FriendRequest> optionalFriendRequest = friendRequestRepository.findById(
       requestId
     );
@@ -90,6 +104,8 @@ public class FriendshipService {
       friendship.setStatus("FRIENDS");
       friendshipRepository.save(friendship);
 
+      // Friend Request Notification accepted
+
       return friendRequest;
     } else {
       throw new IllegalArgumentException(
@@ -98,7 +114,7 @@ public class FriendshipService {
     }
   }
 
-  public FriendRequest denyFriendRequest(UUID userId, UUID requestId) {
+  public FriendRequest denyFriendRequest(UUID requestId, UUID userId) {
     Optional<FriendRequest> optionalFriendRequest = friendRequestRepository.findById(
       requestId
     );

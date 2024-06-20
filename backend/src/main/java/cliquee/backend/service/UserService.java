@@ -34,7 +34,7 @@ public class UserService {
     return userRepository.findByEmailExcludingBlocked(email, userId);
   }
 
-  public List<User> searchUsers(String username, UUID userId) {
+  public List<User> searchUsers(UUID userId, String username) {
     return userRepository.searchUsersExcludingBlocked(username, userId);
   }
 
@@ -66,12 +66,14 @@ public class UserService {
     userRepository.deleteById(id);
   }
 
-  public void changePassword(UUID id, String newPassword) {
+  public void changePassword(UUID id, String oldPassword, String newPassword) {
     userRepository
       .findById(id)
       .ifPresent(user -> {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        // THIS NEEDS TO COMPARE OLDPASSWORD WITH CURRENT PASSWORD,
+        // THEN REPLACE IT WITH NEW PASSWORD
       });
   }
 }

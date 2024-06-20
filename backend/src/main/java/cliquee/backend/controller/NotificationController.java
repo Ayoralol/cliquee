@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,45 +22,39 @@ public class NotificationController {
   @Autowired
   private NotificationService notificationService;
 
-  @GetMapping("/{id}")
+  @GetMapping("/{currentUserId}")
   public ResponseEntity<List<Notification>> getAllNotifications(
-    @PathVariable UUID id
+    @PathVariable UUID currentUserId
   ) {
     List<Notification> notifications = notificationService.getAllNotificationsForUser(
-      id
+      currentUserId
     );
     return ResponseEntity.ok(notifications);
   }
 
-  @GetMapping("/{id}/{notification_id}")
+  @GetMapping("/get/{notificationId}")
   public ResponseEntity<Notification> getNotification(
-    @PathVariable UUID id,
-    @PathVariable UUID notificationId
+    @PathVariable UUID notificationId,
+    @RequestParam UUID currentUserId
   ) {
     Optional<Notification> notification = notificationService.getNotification(
-      id,
-      notificationId
+      notificationId,
+      currentUserId
     );
     return notification
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  @PostMapping("/{id}/{notification_id}/respond")
-  public ResponseEntity<Notification> respondToNotification(
-    @PathVariable UUID id,
+  @PostMapping("/read/{notificationId}")
+  public ResponseEntity<Notification> markNotificationAsRead(
     @PathVariable UUID notificationId,
-    @RequestBody UUID relatedId,
-    @RequestBody String relatedType,
-    @RequestBody String response
+    @RequestParam UUID currentUserId
   ) {
     try {
-      Notification notification = notificationService.respondToNotification(
-        id,
+      Notification notification = notificationService.markNotificationAsRead(
         notificationId,
-        relatedId,
-        relatedType,
-        response
+        currentUserId
       );
       return ResponseEntity.ok(notification);
     } catch (IllegalArgumentException e) {
@@ -67,15 +62,21 @@ public class NotificationController {
     }
   }
 
-  @PostMapping("/{id}/{notification_id}/read")
-  public ResponseEntity<Notification> markNotificationAsRead(
-    @PathVariable UUID id,
-    @PathVariable UUID notificationId
+  @PostMapping("/respond/{notificationId}")
+  public ResponseEntity<Notification> respondToNotification(
+    @PathVariable UUID notificationId,
+    @PathVariable UUID currentUserId,
+    @RequestBody String type,
+    @RequestBody UUID relatedId,
+    @RequestBody String response
   ) {
     try {
-      Notification notification = notificationService.markNotificationAsRead(
-        id,
-        notificationId
+      Notification notification = notificationService.respondToNotification(
+        notificationId,
+        currentUserId,
+        type,
+        relatedId,
+        response
       );
       return ResponseEntity.ok(notification);
     } catch (IllegalArgumentException e) {

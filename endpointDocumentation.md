@@ -8,9 +8,6 @@
   - GET
   - Params = currentUserId
   - Get a users profile
-- /{currentUserId}/friends
-  - GET
-  - Get all your friends
 - /username/{username}
   - GET
   - Params = currentUserId
@@ -33,7 +30,7 @@
   - Create a new User
 - /delete/{currentUserId}
   - DELETE
-  - Delete a user
+  - Delete a user / remove account
 - /change-password/{currentUserId}
   - PUT
   - Body = {oldPassword, newPassword}
@@ -46,6 +43,9 @@
   - DELETE
   - Params = currentUserId
   - Unblock a user
+- /blocked/{currentUserId}
+  - GET
+  - Get current users blocked list
 
 ### Groups Endpoints
 
@@ -53,6 +53,7 @@
 
 - /create
   - POST
+  - Params = currentUserId
   - Body = `Group`
   - Create a new group
 - /search
@@ -66,6 +67,10 @@
   - GET
   - Params = currentUserId
   - Get a specific group
+- /{groupId}/update
+  - PUT
+  - Params = currentUserId
+  - Update a groups details
 - /{groupId}/availabilities
   - GET
   - Params = currentUserId
@@ -97,10 +102,10 @@
   - DELETE
   - Params = currentUserId
   - Delete an event
-- /{groupId}/events/{eventId}/attendees
+- /{groupId}/events/{eventId}/participants
   - GET
   - Params = currentUserId
-  - Get attendants for an event
+  - Get participants for an event
 - /{groupId}/members
   - GET
   - Param = currentUserId
@@ -113,11 +118,11 @@
   - Params = currentUserId
   - Body = `Group`
   - Update a group
-- /{groupId}/members/add-member/{friendId}
+- /{groupId}/members/add/{friendId}
   - POST
   - Params = currentUserId
   - Add a friend to the group
-- /{groupId}/member/remove-member/{memberId}
+- /{groupId}/member/remove/{memberId}
   - DELETE
   - Params = currentUserId
   - remove a group member

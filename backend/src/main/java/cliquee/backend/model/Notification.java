@@ -26,10 +26,10 @@ public class Notification {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  private UUID sender_id;
   private String type;
-  private String message;
   private UUID related_id;
-  private String related_type;
+  private String message;
   private boolean is_read = false;
   private LocalDateTime created_at = LocalDateTime.now();
 

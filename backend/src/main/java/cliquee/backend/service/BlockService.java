@@ -18,7 +18,7 @@ public class BlockService {
   @Autowired
   private UserRepository userRepository;
 
-  public Block blockUser(UUID userId, UUID blockedId) {
+  public Block blockUser(UUID blockedId, UUID userId) {
     if (
       userRepository.existsById(userId) && userRepository.existsById(blockedId)
     ) {
@@ -30,7 +30,7 @@ public class BlockService {
     }
   }
 
-  public void unblockUser(UUID userId, UUID blockedId) {
+  public void unblockUser(UUID blockedId, UUID userId) {
     BlockId blockId = new BlockId(userId, blockedId);
     if (blockRepository.existsById(blockId)) {
       blockRepository.deleteById(blockId);

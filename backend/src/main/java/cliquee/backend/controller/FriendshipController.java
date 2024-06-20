@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,21 +20,23 @@ public class FriendshipController {
   @Autowired
   private FriendshipService friendshipService;
 
-  @GetMapping("/{userid}")
-  public ResponseEntity<List<UUID>> getFriends(@PathVariable UUID userId) {
-    List<UUID> friends = friendshipService.getFriendIds(userId);
+  @GetMapping("/{currentUserId}")
+  public ResponseEntity<List<UUID>> getFriends(
+    @PathVariable UUID currentUserId
+  ) {
+    List<UUID> friends = friendshipService.getFriendIds(currentUserId);
     return ResponseEntity.ok(friends);
   }
 
-  @PostMapping("/{userId}/request/{friendId}")
+  @PostMapping("/request/{friendId}")
   public ResponseEntity<FriendRequest> sendFriendRequest(
-    @PathVariable UUID userId,
-    @PathVariable UUID friendId
+    @PathVariable UUID friendId,
+    @RequestParam UUID currentUserId
   ) {
     try {
       FriendRequest friendRequest = friendshipService.sendFriendRequest(
-        userId,
-        friendId
+        friendId,
+        currentUserId
       );
       return ResponseEntity.ok(friendRequest);
     } catch (IllegalArgumentException e) {
@@ -41,25 +44,25 @@ public class FriendshipController {
     }
   }
 
-  @GetMapping("/{userId}/requests")
+  @GetMapping("/requests/{currentUserId}")
   public ResponseEntity<List<FriendRequest>> getFriendRequests(
-    @PathVariable UUID userId
+    @PathVariable UUID currentUserId
   ) {
     List<FriendRequest> friendRequests = friendshipService.getFriendRequests(
-      userId
+      currentUserId
     );
     return ResponseEntity.ok(friendRequests);
   }
 
-  @PostMapping("/{userId}/accept/{requestId}")
+  @PostMapping("/requests/accept/{requestId}")
   public ResponseEntity<FriendRequest> acceptFriendRequest(
-    @PathVariable UUID userId,
-    @PathVariable UUID requestId
+    @PathVariable UUID requestId,
+    @RequestParam UUID currentUserId
   ) {
     try {
       FriendRequest friendRequest = friendshipService.acceptFriendRequest(
-        userId,
-        requestId
+        requestId,
+        currentUserId
       );
       return ResponseEntity.ok(friendRequest);
     } catch (IllegalArgumentException e) {
@@ -67,15 +70,15 @@ public class FriendshipController {
     }
   }
 
-  @PostMapping("/{userId}/deny/{requestId}")
+  @PostMapping("/requests/deny/{requestId}")
   public ResponseEntity<FriendRequest> denyFriendRequest(
-    @PathVariable UUID userId,
-    @PathVariable UUID requestId
+    @PathVariable UUID requestId,
+    @RequestParam UUID currentUserId
   ) {
     try {
       FriendRequest friendRequest = friendshipService.denyFriendRequest(
-        userId,
-        requestId
+        requestId,
+        currentUserId
       );
       return ResponseEntity.ok(friendRequest);
     } catch (IllegalArgumentException e) {

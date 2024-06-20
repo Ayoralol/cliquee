@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,136 +28,172 @@ public class GroupController {
   @Autowired
   private GroupService groupService;
 
-  @GetMapping("/all/{user_id}")
-  public ResponseEntity<List<Group>> getAllGroupsByUserId(
-    @PathVariable UUID user_id
+  @PostMapping("/create")
+  public Group createGroup(
+    @RequestParam UUID currentUserId,
+    @RequestBody Group group
   ) {
-    List<Group> groups = groupService.getGroupsByUserId(user_id);
+    return groupService.createGroup(currentUserId, group);
+  }
+
+  @GetMapping("/search")
+  public List<Group> searchGroups(
+    @RequestParam UUID currentUserId,
+    @RequestParam String keyword
+  ) {
+    return groupService.searchGroups(currentUserId, keyword);
+  }
+
+  @GetMapping("/{currentUserId}/all")
+  public ResponseEntity<List<Group>> getAllGroupsByUserId(
+    @PathVariable UUID currentUserId
+  ) {
+    List<Group> groups = groupService.getGroupsByUserId(currentUserId);
     return ResponseEntity.ok(groups);
   }
 
-  @PostMapping("/create")
-  public Group createGroup(@RequestBody Group group) {
-    return groupService.createGroup(group);
+  @GetMapping("/{groupId}")
+  public Group getGroupById(@PathVariable UUID groupId) {
+    return groupService.getGroupById(groupId);
   }
 
-  @GetMapping("/search/{keyword}")
-  public List<Group> searchGroups(@PathVariable String keyword) {
-    return groupService.searchGroups(keyword);
-  }
-
-  @GetMapping("/{id}")
-  public Group getGroupById(@PathVariable UUID id) {
-    return groupService.getGroupById(id);
-  }
-
-  @PutMapping("/{id}/update")
-  public Group updateGroup(
-    @PathVariable UUID id,
-    @RequestBody Group groupDetails
+  @GetMapping("/{groupId}/availabilities")
+  public List<GroupAvailability> getGroupAvailabilities(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId
   ) {
-    return groupService.updateGroup(id, groupDetails);
+    return groupService.getGroupAvailabilities(groupId, currentUserId);
   }
 
-  @GetMapping("/{id}/availabilities")
-  public List<GroupAvailability> getGroupAvailabilities(@PathVariable UUID id) {
-    return groupService.getGroupAvailabilities(id);
-  }
-
-  @PostMapping("/{id}/availabilities/create")
+  @PostMapping("/{groupId}/availabilities/create")
   public ResponseEntity<GroupAvailability> createGroupAvailability(
-    @PathVariable UUID id,
+    @PathVariable UUID groupId,
     @RequestBody GroupAvailability availability
   ) {
     GroupAvailability newAvailability = groupService.createGroupAvailability(
-      id,
+      groupId,
       availability
     );
     return ResponseEntity.status(HttpStatus.CREATED).body(newAvailability);
   }
 
-  @GetMapping("/{id}/events")
-  public List<Event> getGroupEvents(@PathVariable UUID id) {
-    return groupService.getGroupEvents(id);
+  @GetMapping("/{groupId}/events")
+  public List<Event> getGroupEvents(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId
+  ) {
+    return groupService.getGroupEvents(groupId, currentUserId);
   }
 
-  @PostMapping("/{id}/events/create")
+  @PostMapping("/{groupId}/events/create")
   public Event createGroupEvent(
     @PathVariable UUID id,
+    @RequestParam UUID currentUserId,
     @RequestBody Event event
   ) {
-    return groupService.createGroupEvent(id, event);
+    return groupService.createGroupEvent(id, currentUserId, event);
   }
 
-  @GetMapping("/{id}/events/{event_id}")
+  @GetMapping("/{groupId}/events/{eventId}")
   public Event getGroupEventById(
-    @PathVariable UUID id,
-    @PathVariable UUID event_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID eventId,
+    @RequestParam UUID currentUserId
   ) {
-    return groupService.getGroupEventById(id, event_id);
+    return groupService.getGroupEventById(groupId, eventId, currentUserId);
   }
 
-  @PutMapping("/{id}/events/{event_id}/update")
+  @PutMapping("/{groupId}/events/{eventId}/update")
   public Event updateGroupEvent(
-    @PathVariable UUID id,
-    @PathVariable UUID event_id,
+    @PathVariable UUID groupId,
+    @PathVariable UUID eventId,
+    @RequestParam UUID currentUserId,
     @RequestBody Event eventDetails
   ) {
-    return groupService.updateGroupEvent(id, event_id, eventDetails);
+    return groupService.updateGroupEvent(
+      groupId,
+      eventId,
+      currentUserId,
+      eventDetails
+    );
   }
 
-  @DeleteMapping("/{id}/events/{event_id}/cancel")
+  @DeleteMapping("/{groupId}/events/{eventId}/cancel")
   public ResponseEntity<?> cancelGroupEvent(
-    @PathVariable UUID id,
-    @PathVariable UUID event_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID eventId,
+    @RequestParam UUID currentUserId
   ) {
-    groupService.cancelGroupEvent(id, event_id);
+    groupService.cancelGroupEvent(groupId, eventId, currentUserId);
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/{id}/events/{event_id}/participants")
+  @GetMapping("/{groupId}/events/{eventId}/participants")
   public List<EventParticipant> getGroupEventParticipants(
-    @PathVariable UUID id,
-    @PathVariable UUID event_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID eventId,
+    @RequestParam UUID currentUserId
   ) {
-    return groupService.getGroupEventParticipants(id, event_id);
+    return groupService.getGroupEventParticipants(
+      groupId,
+      eventId,
+      currentUserId
+    );
   }
 
-  @GetMapping("/{id}/members")
-  public List<UserGroup> getGroupMembers(@PathVariable UUID id) {
-    return groupService.getGroupMembers(id);
+  @GetMapping("/{groupId}/members")
+  public List<UserGroup> getGroupMembers(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId
+  ) {
+    return groupService.getGroupMembers(groupId, currentUserId);
   }
 
-  @PutMapping("/{id}/members/{user_id}/add")
+  // GROUP ADMIN ENDPOINTS ONLY BELOW
+
+  @PutMapping("/{groupId}/update")
+  public Group updateGroup(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId,
+    @RequestBody Group groupDetails
+  ) {
+    return groupService.updateGroup(groupId, currentUserId, groupDetails);
+  }
+
+  @PutMapping("/{groupId}/members/add/{friendId}")
   public void addgroupMember(
-    @PathVariable UUID id,
-    @PathVariable UUID user_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID friendId,
+    @RequestParam UUID currentUserId
   ) {
-    groupService.addGroupMember(id, user_id);
+    groupService.addGroupMember(groupId, friendId, currentUserId);
   }
 
-  @DeleteMapping("/{id}/members/{user_id}/remove")
+  @DeleteMapping("/{groupId}/members/remove/{memberId}")
   public ResponseEntity<?> removeGroupMember(
-    @PathVariable UUID id,
-    @PathVariable UUID user_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID memberId,
+    @RequestParam UUID currentUserId
   ) {
-    groupService.removeGroupMember(id, user_id);
+    groupService.removeGroupMember(groupId, memberId, currentUserId);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{id}/members/{user_id}/promote")
+  @PostMapping("/{groupId}/members/promote/{memberId}")
   public UserGroup promoteGroupMember(
-    @PathVariable UUID id,
-    @PathVariable UUID user_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID memberId,
+    @RequestParam UUID currentUserId
   ) {
-    return groupService.promoteGroupMember(id, user_id);
+    return groupService.promoteGroupMember(groupId, memberId, currentUserId);
   }
 
-  @PostMapping("/{id}/members/{user_id}/demote")
+  @PostMapping("/{groupId}/members/demote/{memberId}")
   public UserGroup demoteGroupMember(
-    @PathVariable UUID id,
-    @PathVariable UUID user_id
+    @PathVariable UUID groupId,
+    @PathVariable UUID memberId,
+    @RequestParam UUID currentUserId
   ) {
-    return groupService.demoteGroupMember(id, user_id);
+    return groupService.demoteGroupMember(groupId, memberId, currentUserId);
   }
 }

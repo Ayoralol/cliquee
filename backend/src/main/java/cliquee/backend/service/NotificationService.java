@@ -17,13 +17,16 @@ public class NotificationService {
   @Autowired
   private FriendshipService friendshipService;
 
+  @Autowired
+  private UserService userService;
+
   public List<Notification> getAllNotificationsForUser(UUID userId) {
     return notificationRepository.findAllById(userId);
   }
 
   public Optional<Notification> getNotification(
-    UUID userId,
-    UUID notificationId
+    UUID notificationId,
+    UUID userId
   ) {
     Optional<Notification> notification = notificationRepository.findByIdAndUserId(
       notificationId,
@@ -37,10 +40,10 @@ public class NotificationService {
   }
 
   public Notification respondToNotification(
-    UUID userId,
     UUID notificationId,
+    UUID userId,
+    String type,
     UUID relatedId,
-    String relatedType,
     String response
   ) {
     Optional<Notification> optionalNotification = notificationRepository.findByIdAndUserId(
@@ -51,7 +54,7 @@ public class NotificationService {
       Notification notification = optionalNotification.get();
 
       // RESPONSE LOGIC, ADD TO SWITCH CASE WHEN ADDING NEW RELATED TYPES
-      switch (relatedType.toUpperCase()) {
+      switch (type.toUpperCase()) {
         case "FRIEND_REQUEST":
           handleFriendRequestResponse(userId, relatedId, response);
           break;
@@ -89,7 +92,7 @@ public class NotificationService {
     }
   }
 
-  public Notification markNotificationAsRead(UUID userId, UUID notificationId) {
+  public Notification markNotificationAsRead(UUID notificationId, UUID userId) {
     Optional<Notification> optionalNotification = notificationRepository.findByIdAndUserId(
       notificationId,
       userId
@@ -104,4 +107,35 @@ public class NotificationService {
       );
     }
   }
+
+  public Notification createNotification(
+    UUID receiverId,
+    UUID senderId,
+    String type,
+    UUID relatedId,
+    String message
+  ) {
+    Notification notification = new Notification();
+    notification.setUser(userService.getUserById(receiverId, senderId).get());
+    notification.setSender_id(senderId);
+    notification.setType(type.toUpperCase());
+    notification.setRelated_id(relatedId);
+    notification.setMessage(message);
+    return notificationRepository.save(notification);
+  }
 }
+// Notification List
+// GROUPS ****
+// Added to a group
+// Removed from a group
+// Event created in a group
+// Event Updated in a group
+// Event Cancelled in a group
+// Promoted in a group
+// Demoted in a group
+// FRIENDS ****
+// Friend Request
+// Friend Request Accepted
+// MESSAGES ****
+// Friend sent a message (One notif per friend)
+// Group sent a message (One notif per group)

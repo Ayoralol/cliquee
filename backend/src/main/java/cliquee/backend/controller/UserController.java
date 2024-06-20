@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,17 +29,12 @@ public class UserController {
   @Autowired
   private BlockService blockService;
 
-  @GetMapping("/{id}/all")
-  public List<User> getAllUsers(@PathVariable UUID id) {
-    return userService.getAllUsers(id);
-  }
-
-  @GetMapping("/{id}")
+  @GetMapping("/{userId}")
   public ResponseEntity<User> getUserById(
-    @PathVariable UUID id,
+    @PathVariable UUID userId,
     @RequestParam UUID currentUserId
   ) {
-    Optional<User> user = userService.getUserById(id, currentUserId);
+    Optional<User> user = userService.getUserById(userId, currentUserId);
     return user
       .map(ResponseEntity::ok)
       .orElseGet(() -> ResponseEntity.notFound().build());
@@ -69,74 +65,77 @@ public class UserController {
       .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  @GetMapping("/search/{keyword}")
+  @GetMapping("/search")
   public ResponseEntity<List<User>> searchUsers(
-    @PathVariable String keyword,
-    @RequestParam UUID currentUserId
+    @RequestParam UUID currentUserId,
+    @RequestParam String keyword
   ) {
-    List<User> users = userService.searchUsers(keyword, currentUserId);
+    List<User> users = userService.searchUsers(currentUserId, keyword);
     return ResponseEntity.ok(users);
   }
 
-  @PutMapping("/{id}/update")
+  @PutMapping("/update/{currentUserId}")
   public ResponseEntity<User> updateUser(
-    @PathVariable UUID id,
+    @PathVariable UUID currentUserId,
     @RequestBody User userDetails
   ) {
-    User user = userService.updateUser(id, userDetails);
+    User user = userService.updateUser(currentUserId, userDetails);
     return ResponseEntity.ok(user);
   }
 
   @PostMapping("/create")
-  public ResponseEntity<User> createUser(@RequestBody User user) {
-    User newUser = userService.createUser(user);
+  public ResponseEntity<User> createUser(@RequestBody User userDetails) {
+    User newUser = userService.createUser(userDetails);
     return ResponseEntity.ok(newUser);
   }
 
-  @PostMapping("/{id}/delete")
-  public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
-    userService.deleteUser(id);
+  @DeleteMapping("/delete/{currentUserId}")
+  public ResponseEntity<?> deleteUser(@PathVariable UUID currentUserId) {
+    userService.deleteUser(currentUserId);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{id}/change-password")
+  @PutMapping("/change-password/{currentUserId}")
   public ResponseEntity<?> changePassword(
-    @PathVariable UUID id,
+    @PathVariable UUID currentUserId,
+    @RequestBody String oldPassword,
     @RequestBody String newPassword
   ) {
-    userService.changePassword(id, newPassword);
+    userService.changePassword(currentUserId, oldPassword, newPassword);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{id}/block/{blocked_id}")
+  @PostMapping("/block/{blocked_id}")
   public ResponseEntity<Block> blockUser(
-    @PathVariable UUID id,
-    @PathVariable UUID blockedId
+    @PathVariable UUID blockedId,
+    @RequestParam UUID currentUserId
   ) {
     try {
-      Block block = blockService.blockUser(id, blockedId);
+      Block block = blockService.blockUser(blockedId, currentUserId);
       return ResponseEntity.ok(block);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(null);
     }
   }
 
-  @PostMapping("/{id}/unblock/{blocked_id}")
+  @DeleteMapping("/unblock/{blocked_id}")
   public ResponseEntity<Void> unblockUser(
-    @PathVariable UUID id,
-    @PathVariable UUID blockedId
+    @PathVariable UUID blockedId,
+    @RequestParam UUID currentUserId
   ) {
     try {
-      blockService.unblockUser(id, blockedId);
+      blockService.unblockUser(blockedId, currentUserId);
       return ResponseEntity.noContent().build();
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().build();
     }
   }
 
-  @GetMapping("/{id}/blocked")
-  public ResponseEntity<List<Block>> getBlockedUsers(@PathVariable UUID id) {
-    List<Block> blockedUsers = blockService.getBlockedUsers(id);
+  @GetMapping("/blocked/{currentUserId}")
+  public ResponseEntity<List<Block>> getBlockedUsers(
+    @PathVariable UUID currentUserId
+  ) {
+    List<Block> blockedUsers = blockService.getBlockedUsers(currentUserId);
     return ResponseEntity.ok(blockedUsers);
   }
 }
