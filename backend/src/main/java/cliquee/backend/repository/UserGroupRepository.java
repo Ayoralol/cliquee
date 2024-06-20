@@ -14,4 +14,10 @@ public interface UserGroupRepository
   List<UserGroup> findByUserId(UUID userId);
   List<UserGroup> findByGroupId(UUID groupId);
   Optional<UserGroup> findByGroupIdAndUserId(UUID groupId, UUID userId);
+  Boolean existsByGroupIdAndUserId(UUID groupId, UUID userId);
+  Boolean existsByGroupIdAndUserIdAndRole(
+    UUID groupId,
+    UUID userId,
+    String role
+  );
 }

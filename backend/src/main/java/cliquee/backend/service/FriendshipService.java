@@ -67,7 +67,7 @@ public class FriendshipService {
         friendRequest.getId(),
         "You have received a friend request from " +
         user.get().getUsername() +
-        "."
+        "!"
       );
       return friendRequest;
     } else {
@@ -104,7 +104,14 @@ public class FriendshipService {
       friendship.setStatus("FRIENDS");
       friendshipRepository.save(friendship);
 
-      // Friend Request Notification accepted
+      notificationService.createNotification(
+        friendRequest.getSender().getId(),
+        userId,
+        "FRIEND_REQUEST_ACCEPTED",
+        friendRequest.getId(),
+        friendRequest.getReceiver().getUsername() +
+        "Has accepted your friend request!"
+      );
 
       return friendRequest;
     } else {

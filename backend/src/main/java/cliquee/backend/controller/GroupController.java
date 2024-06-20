@@ -53,8 +53,11 @@ public class GroupController {
   }
 
   @GetMapping("/{groupId}")
-  public Group getGroupById(@PathVariable UUID groupId) {
-    return groupService.getGroupById(groupId);
+  public Group getGroupById(
+    @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId
+  ) {
+    return groupService.getGroupById(groupId, currentUserId);
   }
 
   @GetMapping("/{groupId}/availabilities")
@@ -68,10 +71,12 @@ public class GroupController {
   @PostMapping("/{groupId}/availabilities/create")
   public ResponseEntity<GroupAvailability> createGroupAvailability(
     @PathVariable UUID groupId,
+    @RequestParam UUID currentUserId,
     @RequestBody GroupAvailability availability
   ) {
     GroupAvailability newAvailability = groupService.createGroupAvailability(
       groupId,
+      currentUserId,
       availability
     );
     return ResponseEntity.status(HttpStatus.CREATED).body(newAvailability);
@@ -87,11 +92,11 @@ public class GroupController {
 
   @PostMapping("/{groupId}/events/create")
   public Event createGroupEvent(
-    @PathVariable UUID id,
+    @PathVariable UUID groupId,
     @RequestParam UUID currentUserId,
     @RequestBody Event event
   ) {
-    return groupService.createGroupEvent(id, currentUserId, event);
+    return groupService.createGroupEvent(groupId, currentUserId, event);
   }
 
   @GetMapping("/{groupId}/events/{eventId}")

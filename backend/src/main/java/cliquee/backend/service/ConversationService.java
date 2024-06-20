@@ -7,6 +7,7 @@ import cliquee.backend.model.User;
 import cliquee.backend.repository.ConversationRepository;
 import cliquee.backend.repository.GroupMessageRepository;
 import cliquee.backend.repository.MessageRepository;
+import cliquee.backend.repository.UserGroupRepository;
 import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,9 @@ public class ConversationService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private UserGroupRepository userGroupRepository;
+
   public List<Conversation> getAllConversations(UUID userId) {
     return conversationRepository.findAllByUserId(userId);
   }
@@ -40,11 +44,17 @@ public class ConversationService {
     return conversationRepository.findByIdAndUserId(conversationId, userId);
   }
 
-  public List<Message> getMessages(UUID conversationId) {
+  public List<Message> getMessages(UUID conversationId, UUID userId) {
+    if (!conversationRepository.existsByIdAndUserId(conversationId, userId)) {
+      throw new IllegalArgumentException("Conversation not found");
+    }
     return messageRepository.findAllByConversation_Id(conversationId);
   }
 
-  public List<GroupMessage> getGroupMessages(UUID groupId) {
+  public List<GroupMessage> getGroupMessages(UUID groupId, UUID userId) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new IllegalArgumentException("Group not found");
+    }
     return groupMessageRepository.findAllByGroup_Id(groupId);
   }
 

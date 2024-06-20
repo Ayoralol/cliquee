@@ -133,9 +133,3 @@ public class NotificationService {
 // Event Cancelled in a group
 // Promoted in a group
 // Demoted in a group
-// FRIENDS ****
-// Friend Request
-// Friend Request Accepted
-// MESSAGES ****
-// Friend sent a message (One notif per friend)
-// Group sent a message (One notif per group)

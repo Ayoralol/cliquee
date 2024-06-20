@@ -20,4 +20,9 @@ public interface ConversationRepository
     "SELECT c FROM Conversation c WHERE c.id = :conversationId AND (c.user1.id = :userId OR c.user2.id = :userId)"
   )
   Optional<Conversation> findByIdAndUserId(UUID conversationId, UUID userId);
+
+  @Query(
+    "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Conversation c WHERE (c.user1.id = :userId OR c.user2.id = :userId) AND c.id = :id"
+  )
+  Boolean existsByIdAndUserId(UUID id, UUID userId);
 }

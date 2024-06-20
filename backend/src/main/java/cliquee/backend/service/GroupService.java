@@ -49,41 +49,77 @@ public class GroupService {
       .collect(Collectors.toList());
   }
 
-  public Group createGroup(Group group) {
+  public Group createGroup(UUID userId, Group group) {
+    User user = userRepository
+      .findById(userId)
+      .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    UserGroup userGroup = new UserGroup();
+    userGroup.setUser(user);
+    userGroup.setGroup(group);
+    userGroup.setRole("ADMIN");
+    userGroupRepository.save(userGroup);
     return groupRepository.save(group);
   }
 
-  public List<Group> searchGroups(String keyword) {
-    return groupRepository.findByNameContainingIgnoreCase(keyword);
+  public List<Group> searchGroups(UUID userId, String keyword) {
+    List<UserGroup> userGroups = userGroupRepository.findByUserId(userId);
+    List<Group> groups = userGroups
+      .stream()
+      .map(UserGroup::getGroup)
+      .collect(Collectors.toList());
+    return groups
+      .stream()
+      .filter(group ->
+        group.getName().toLowerCase().contains(keyword.toLowerCase())
+      )
+      .collect(Collectors.toList());
   }
 
-  public Group getGroupById(UUID id) {
-    Optional<Group> group = groupRepository.findById(id);
+  public Group getGroupById(UUID groupId, UUID userId) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
+    Optional<Group> group = groupRepository.findById(groupId);
     if (group.isPresent()) {
       return group.get();
     } else {
-      throw new ResourceNotFoundException("Group not found with id " + id);
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
     }
   }
 
-  public Group updateGroup(UUID id, Group groupDetails) {
-    Group group = getGroupById(id);
+  public Group updateGroup(UUID groupId, UUID adminId, Group groupDetails) {
+    if (
+      !userGroupRepository.existsByGroupIdAndUserIdAndRole(
+        groupId,
+        adminId,
+        "ADMIN"
+      )
+    ) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
+    Group group = getGroupById(groupId, adminId);
     group.setName(groupDetails.getName());
     group.setDescription(groupDetails.getDescription());
     return groupRepository.save(group);
   }
 
-  public List<Event> getGroupEvents(UUID id) {
-    return eventRepository.findByGroupId(id);
+  public List<Event> getGroupEvents(UUID groupId, UUID userId) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
+    return eventRepository.findByGroupId(groupId);
   }
 
-  public Event createGroupEvent(UUID groupId, Event event) {
-    Group group = getGroupById(groupId);
+  public Event createGroupEvent(UUID groupId, UUID userId, Event event) {
+    Group group = getGroupById(groupId, userId);
     event.setGroup(group);
     return eventRepository.save(event);
   }
 
-  public Event getGroupEventById(UUID groupId, UUID eventId) {
+  public Event getGroupEventById(UUID groupId, UUID eventId, UUID userId) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
     return eventRepository
       .findByGroupIdAndId(groupId, eventId)
       .orElseThrow(() ->
@@ -96,9 +132,10 @@ public class GroupService {
   public Event updateGroupEvent(
     UUID groupId,
     UUID eventId,
+    UUID userId,
     Event eventDetails
   ) {
-    Event event = getGroupEventById(groupId, eventId);
+    Event event = getGroupEventById(groupId, eventId, userId);
     event.setName(eventDetails.getName());
     event.setDescription(eventDetails.getDescription());
     event.setStart_time(eventDetails.getStart_time());
@@ -106,36 +143,49 @@ public class GroupService {
     return eventRepository.save(event);
   }
 
-  public void cancelGroupEvent(UUID groupId, UUID eventId) {
-    Event event = getGroupEventById(groupId, eventId);
+  public void cancelGroupEvent(UUID groupId, UUID eventId, UUID userId) {
+    Event event = getGroupEventById(groupId, eventId, userId);
     eventRepository.delete(event);
   }
 
-  public List<GroupAvailability> getGroupAvailabilities(UUID id) {
-    if (!groupRepository.existsById(id)) {
-      throw new ResourceNotFoundException("Group not found with id " + id);
+  public List<GroupAvailability> getGroupAvailabilities(
+    UUID groupId,
+    UUID userId
+  ) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
     }
-    return groupAvailabilityRepository.findByGroupId(id);
+    return groupAvailabilityRepository.findByGroupId(groupId);
   }
 
   public List<EventParticipant> getGroupEventParticipants(
-    UUID id,
-    UUID eventId
+    UUID groupId,
+    UUID eventId,
+    UUID userId
   ) {
-    if (!groupRepository.existsById(id)) {
-      throw new ResourceNotFoundException("Group not found with id " + id);
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
     }
     return groupParticipantsRepository.findByEventId(eventId);
   }
 
-  public List<UserGroup> getGroupMembers(UUID groupId) {
-    if (!groupRepository.existsById(groupId)) {
+  public List<UserGroup> getGroupMembers(UUID groupId, UUID userId) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
       throw new ResourceNotFoundException("Group not found with id " + groupId);
     }
     return userGroupRepository.findByGroupId(groupId);
   }
 
-  public void addGroupMember(UUID groupId, UUID userId) {
+  public void addGroupMember(UUID groupId, UUID friendId, UUID adminId) {
+    if (
+      !userGroupRepository.existsByGroupIdAndUserIdAndRole(
+        groupId,
+        adminId,
+        "ADMIN"
+      )
+    ) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
     Group group = groupRepository
       .findById(groupId)
       .orElseThrow(() ->
@@ -143,9 +193,9 @@ public class GroupService {
       );
 
     User user = userRepository
-      .findById(userId)
+      .findById(friendId)
       .orElseThrow(() ->
-        new ResourceNotFoundException("User not found with id " + userId)
+        new ResourceNotFoundException("User not found with id " + friendId)
       );
 
     UserGroup userGroup = new UserGroup();
@@ -155,7 +205,16 @@ public class GroupService {
     userGroupRepository.save(userGroup);
   }
 
-  public void removeGroupMember(UUID groupId, UUID userId) {
+  public void removeGroupMember(UUID groupId, UUID userId, UUID adminId) {
+    if (
+      !userGroupRepository.existsByGroupIdAndUserIdAndRole(
+        groupId,
+        adminId,
+        "ADMIN"
+      )
+    ) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
     UserGroup userGroup = userGroupRepository
       .findByGroupIdAndUserId(groupId, userId)
       .orElseThrow(() ->
@@ -166,7 +225,16 @@ public class GroupService {
     userGroupRepository.delete(userGroup);
   }
 
-  public UserGroup promoteGroupMember(UUID groupId, UUID userId) {
+  public UserGroup promoteGroupMember(UUID groupId, UUID userId, UUID adminId) {
+    if (
+      !userGroupRepository.existsByGroupIdAndUserIdAndRole(
+        groupId,
+        adminId,
+        "ADMIN"
+      )
+    ) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
     UserGroup userGroup = userGroupRepository
       .findByGroupIdAndUserId(groupId, userId)
       .orElseThrow(() ->
@@ -178,7 +246,16 @@ public class GroupService {
     return userGroupRepository.save(userGroup);
   }
 
-  public UserGroup demoteGroupMember(UUID groupId, UUID userId) {
+  public UserGroup demoteGroupMember(UUID groupId, UUID userId, UUID adminId) {
+    if (
+      !userGroupRepository.existsByGroupIdAndUserIdAndRole(
+        groupId,
+        adminId,
+        "ADMIN"
+      )
+    ) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
     UserGroup userGroup = userGroupRepository
       .findByGroupIdAndUserId(groupId, userId)
       .orElseThrow(() ->
@@ -192,8 +269,12 @@ public class GroupService {
 
   public GroupAvailability createGroupAvailability(
     UUID groupId,
+    UUID userId,
     GroupAvailability availability
   ) {
+    if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
+      throw new ResourceNotFoundException("Group not found with id " + groupId);
+    }
     Group group = groupRepository
       .findById(groupId)
       .orElseThrow(() -> new ResourceNotFoundException("Group not found"));
