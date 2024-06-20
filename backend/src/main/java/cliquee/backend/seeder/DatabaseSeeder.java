@@ -92,7 +92,7 @@ public class DatabaseSeeder implements ApplicationRunner {
       user1.setPassword(passwordEncoder.encode("password1234"));
       user1.setFirst_name("FirstName");
       user1.setLast_name("LastName");
-      user1.setRole("ADMIN");
+      user1.setRole("ADMIN,USER");
 
       User user2 = new User();
       user2.setUsername("Bro De Rick");
