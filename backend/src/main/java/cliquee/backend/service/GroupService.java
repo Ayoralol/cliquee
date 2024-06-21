@@ -53,12 +53,13 @@ public class GroupService {
     User user = userRepository
       .findById(userId)
       .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    Group savedGroup = groupRepository.save(group);
     UserGroup userGroup = new UserGroup();
     userGroup.setUser(user);
-    userGroup.setGroup(group);
+    userGroup.setGroup(savedGroup);
     userGroup.setRole("ADMIN");
     userGroupRepository.save(userGroup);
-    return groupRepository.save(group);
+    return savedGroup;
   }
 
   public List<Group> searchGroups(UUID userId, String keyword) {
@@ -77,7 +78,7 @@ public class GroupService {
 
   public Group getGroupById(UUID groupId, UUID userId) {
     if (!userGroupRepository.existsByGroupIdAndUserId(groupId, userId)) {
-      throw new ResourceNotFoundException("Group not found with id " + groupId);
+      throw new ResourceNotFoundException("UserGroup not found");
     }
     Optional<Group> group = groupRepository.findById(groupId);
     if (group.isPresent()) {
@@ -278,7 +279,11 @@ public class GroupService {
     Group group = groupRepository
       .findById(groupId)
       .orElseThrow(() -> new ResourceNotFoundException("Group not found"));
+    User user = userRepository
+      .findById(userId)
+      .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     availability.setGroup(group);
+    availability.setUser(user);
     return groupAvailabilityRepository.save(availability);
   }
 }

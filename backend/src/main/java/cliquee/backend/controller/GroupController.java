@@ -1,5 +1,7 @@
 package cliquee.backend.controller;
 
+import cliquee.backend.DTO.EventDTO;
+import cliquee.backend.DTO.GroupAvailabilityDTO;
 import cliquee.backend.model.Event;
 import cliquee.backend.model.EventParticipant;
 import cliquee.backend.model.Group;
@@ -8,6 +10,7 @@ import cliquee.backend.model.UserGroup;
 import cliquee.backend.service.GroupService;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +48,7 @@ public class GroupController {
   }
 
   @GetMapping("/{currentUserId}/all")
-  public ResponseEntity<List<Group>> getAllGroupsByUserId(
+  public ResponseEntity<List<Group>> getGroupsByUserId(
     @PathVariable UUID currentUserId
   ) {
     List<Group> groups = groupService.getGroupsByUserId(currentUserId);
@@ -61,15 +64,22 @@ public class GroupController {
   }
 
   @GetMapping("/{groupId}/availabilities")
-  public List<GroupAvailability> getGroupAvailabilities(
+  public List<GroupAvailabilityDTO> getGroupAvailabilities(
     @PathVariable UUID groupId,
     @RequestParam UUID currentUserId
   ) {
-    return groupService.getGroupAvailabilities(groupId, currentUserId);
+    List<GroupAvailability> availabilities = groupService.getGroupAvailabilities(
+      groupId,
+      currentUserId
+    );
+    return availabilities
+      .stream()
+      .map(GroupAvailabilityDTO::new)
+      .collect(Collectors.toList());
   }
 
   @PostMapping("/{groupId}/availabilities/create")
-  public ResponseEntity<GroupAvailability> createGroupAvailability(
+  public ResponseEntity<GroupAvailabilityDTO> createGroupAvailability(
     @PathVariable UUID groupId,
     @RequestParam UUID currentUserId,
     @RequestBody GroupAvailability availability
@@ -79,48 +89,63 @@ public class GroupController {
       currentUserId,
       availability
     );
-    return ResponseEntity.status(HttpStatus.CREATED).body(newAvailability);
+    GroupAvailabilityDTO availabilityDTO = new GroupAvailabilityDTO(
+      newAvailability
+    );
+    return ResponseEntity.status(HttpStatus.CREATED).body(availabilityDTO);
   }
 
   @GetMapping("/{groupId}/events")
-  public List<Event> getGroupEvents(
+  public List<EventDTO> getGroupEvents(
     @PathVariable UUID groupId,
     @RequestParam UUID currentUserId
   ) {
-    return groupService.getGroupEvents(groupId, currentUserId);
+    List<Event> events = groupService.getGroupEvents(groupId, currentUserId);
+    return events.stream().map(EventDTO::new).collect(Collectors.toList());
   }
 
   @PostMapping("/{groupId}/events/create")
-  public Event createGroupEvent(
+  public EventDTO createGroupEvent(
     @PathVariable UUID groupId,
     @RequestParam UUID currentUserId,
     @RequestBody Event event
   ) {
-    return groupService.createGroupEvent(groupId, currentUserId, event);
+    Event newEvent = groupService.createGroupEvent(
+      groupId,
+      currentUserId,
+      event
+    );
+    return new EventDTO(newEvent);
   }
 
   @GetMapping("/{groupId}/events/{eventId}")
-  public Event getGroupEventById(
+  public EventDTO getGroupEventById(
     @PathVariable UUID groupId,
     @PathVariable UUID eventId,
     @RequestParam UUID currentUserId
   ) {
-    return groupService.getGroupEventById(groupId, eventId, currentUserId);
+    Event event = groupService.getGroupEventById(
+      groupId,
+      eventId,
+      currentUserId
+    );
+    return new EventDTO(event);
   }
 
   @PutMapping("/{groupId}/events/{eventId}/update")
-  public Event updateGroupEvent(
+  public EventDTO updateGroupEvent(
     @PathVariable UUID groupId,
     @PathVariable UUID eventId,
     @RequestParam UUID currentUserId,
     @RequestBody Event eventDetails
   ) {
-    return groupService.updateGroupEvent(
+    Event event = groupService.updateGroupEvent(
       groupId,
       eventId,
       currentUserId,
       eventDetails
     );
+    return new EventDTO(event);
   }
 
   @DeleteMapping("/{groupId}/events/{eventId}/cancel")

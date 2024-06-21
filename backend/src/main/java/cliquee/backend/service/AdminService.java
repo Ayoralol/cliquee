@@ -54,6 +54,6 @@ public class AdminService {
 
   public Boolean confirmAdminId(UUID adminId) {
     User user = userRepository.findById(adminId).orElse(null);
-    return user != null && user.getRole().equals("ADMIN");
+    return user != null && user.getRole().split(",")[0].equals("ADMIN");
   }
 }

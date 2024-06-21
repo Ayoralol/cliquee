@@ -105,7 +105,7 @@ public class UserController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/block/{blocked_id}")
+  @PostMapping("/block/{blockedId}")
   public ResponseEntity<Block> blockUser(
     @PathVariable UUID blockedId,
     @RequestParam UUID currentUserId
