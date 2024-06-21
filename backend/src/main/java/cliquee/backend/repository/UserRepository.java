@@ -13,6 +13,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   Optional<User> findByUsername(String username);
   Optional<User> findByEmail(String email);
 
+  @Query("SELECT u.username FROM User u WHERE u.id = :id")
+  Optional<String> findUsernameById(UUID id);
+
   @Query(
     "SELECT u FROM User u WHERE u.id = :id AND u.id NOT IN (SELECT b.blocked.id FROM Block b WHERE b.blocker.id = :userId) AND u.id NOT IN (SELECT b.blocker.id FROM Block b WHERE b.blocked.id = :userId)"
   )

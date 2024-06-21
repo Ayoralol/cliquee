@@ -1,5 +1,7 @@
 package cliquee.backend.service;
 
+import cliquee.backend.event.FriendRequestAcceptEvent;
+import cliquee.backend.event.FriendRequestEvent;
 import cliquee.backend.model.FriendRequest;
 import cliquee.backend.model.Friendship;
 import cliquee.backend.model.User;
@@ -11,23 +13,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FriendshipService {
 
-  @Autowired
-  private FriendshipRepository friendshipRepository;
+  private final FriendshipRepository friendshipRepository;
+  private final FriendRequestRepository friendRequestRepository;
+  private final UserRepository userRepository;
+  private final ApplicationEventPublisher eventPublisher;
 
-  @Autowired
-  private FriendRequestRepository friendRequestRepository;
-
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private NotificationService notificationService;
+  public FriendshipService(
+    FriendshipRepository friendshipRepository,
+    FriendRequestRepository friendRequestRepository,
+    UserRepository userRepository,
+    ApplicationEventPublisher eventPublisher
+  ) {
+    this.friendshipRepository = friendshipRepository;
+    this.friendRequestRepository = friendRequestRepository;
+    this.userRepository = userRepository;
+    this.eventPublisher = eventPublisher;
+  }
 
   public List<Friendship> getAllFriendships(UUID userId) {
     return friendshipRepository.findAllFriendshipsByUser_Id(userId);
@@ -60,14 +67,8 @@ public class FriendshipService {
       friendRequest.setStatus("PENDING");
       friendRequestRepository.save(friendRequest);
 
-      notificationService.createNotification(
-        friendId,
-        userId,
-        "FRIEND_REQUEST",
-        friendRequest.getId(),
-        "You have received a friend request from " +
-        user.get().getUsername() +
-        "!"
+      eventPublisher.publishEvent(
+        new FriendRequestEvent(this, friendId, userId, friendRequest.getId())
       );
       return friendRequest;
     } else {
@@ -104,13 +105,13 @@ public class FriendshipService {
       friendship.setStatus("FRIENDS");
       friendshipRepository.save(friendship);
 
-      notificationService.createNotification(
-        friendRequest.getSender().getId(),
-        userId,
-        "FRIEND_REQUEST_ACCEPTED",
-        friendRequest.getId(),
-        friendRequest.getReceiver().getUsername() +
-        "Has accepted your friend request!"
+      eventPublisher.publishEvent(
+        new FriendRequestAcceptEvent(
+          this,
+          friendRequest.getSender().getId(),
+          friendRequest.getReceiver().getId(),
+          friendRequest.getId()
+        )
       );
 
       return friendRequest;

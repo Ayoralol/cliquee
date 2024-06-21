@@ -4,7 +4,6 @@ import cliquee.backend.model.FriendRequest;
 import cliquee.backend.service.FriendshipService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/friendships")
 public class FriendshipController {
 
-  @Autowired
-  private FriendshipService friendshipService;
+  private final FriendshipService friendshipService;
+
+  public FriendshipController(FriendshipService friendshipService) {
+    this.friendshipService = friendshipService;
+  }
 
   @GetMapping("/{currentUserId}")
   public ResponseEntity<List<UUID>> getFriends(

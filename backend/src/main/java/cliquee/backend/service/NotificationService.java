@@ -1,24 +1,35 @@
 package cliquee.backend.service;
 
+import cliquee.backend.event.FriendRequestAcceptEvent;
+import cliquee.backend.event.FriendRequestEvent;
 import cliquee.backend.model.Notification;
 import cliquee.backend.repository.NotificationRepository;
+import cliquee.backend.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationService {
 
-  @Autowired
-  private NotificationRepository notificationRepository;
+  private final NotificationRepository notificationRepository;
+  private final FriendshipService friendshipService;
+  private final UserService userService;
+  private final UserRepository userRepository;
 
-  @Autowired
-  private FriendshipService friendshipService;
-
-  @Autowired
-  private UserService userService;
+  public NotificationService(
+    NotificationRepository notificationRepository,
+    FriendshipService friendshipService,
+    UserService userService,
+    UserRepository userRepository
+  ) {
+    this.notificationRepository = notificationRepository;
+    this.friendshipService = friendshipService;
+    this.userService = userService;
+    this.userRepository = userRepository;
+  }
 
   public List<Notification> getAllNotificationsForUser(UUID userId) {
     return notificationRepository.findAllById(userId);
@@ -106,6 +117,30 @@ public class NotificationService {
         "Notification not found or does not belong to the user"
       );
     }
+  }
+
+  @EventListener
+  public void handleFriendRequestEvent(FriendRequestEvent event) {
+    createNotification(
+      event.getFriendId(),
+      event.getUserId(),
+      "FRIEND_REQUEST",
+      event.getFriendRequestId(),
+      "You have a new friend request from " +
+      userRepository.findUsernameById(event.getUserId())
+    );
+  }
+
+  @EventListener
+  public void handleFriendRequestAcceptEvent(FriendRequestAcceptEvent event) {
+    createNotification(
+      event.getFriendId(),
+      event.getUserId(),
+      "FRIEND_REQUEST_ACCEPTED",
+      event.getFriendRequestId(),
+      userRepository.findUsernameById(event.getUserId()) +
+      "Has accepted your friend request!"
+    );
   }
 
   public Notification createNotification(
