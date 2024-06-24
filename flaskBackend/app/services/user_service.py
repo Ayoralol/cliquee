@@ -1,7 +1,20 @@
 from app.models.user import User
 from ..extensions import db
-from datetime import datetime
 from flask import jsonify
+
+def get_user_service(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    return jsonify({'user': user}), 200
+
+
+
+
+
+
+
 
 def add_user_service(data):
     username = data.get('username')
@@ -18,8 +31,3 @@ def add_user_service(data):
     db.session.commit()
 
     return jsonify({'message': 'User added successfully'}), 201
-
-def get_users_service():
-    users = User.query.all()
-    return jsonify([{'id': user.id, 'username': user.username, 'email': user.email, 'first_name': user.first_name, "last_name": user.last_name} for user in users])
-

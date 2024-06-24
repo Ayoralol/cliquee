@@ -1,12 +1,9 @@
 from flask import Blueprint, request, jsonify
-from ..services.user_service import add_user_service, get_users_service
-user_bp = Blueprint('user_bp', __name__)
+from ..services.user_service import *
+user_bp = Blueprint('users', __name__, url_prefix='/users')
 
-@user_bp.route('/users', methods=['POST'])
-def add_user():
-    data = request.get_json()
-    return add_user_service(data)
+@user_bp.route('/<user_id>', methods=['GET'])
+def get_user(user_id):
+    current_user_id = request.args.get('current_user_id') # UPDATE THIS TO CHECK
+    return get_user_service(user_id)
 
-@user_bp.route('/users', methods=['GET'])
-def get_users():
-    return get_users_service()
