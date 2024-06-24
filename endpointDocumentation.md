@@ -4,23 +4,23 @@
 
 #### Lead with /users
 
-- /{userId}
+- /{user_id}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a users profile
 - /username/{username}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a user by username
 - /email/{email}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a user by email
 - /search
   - GET
-  - Params = currentUserId, keyword
+  - Params = current_user_id, keyword
   - Search for users
-- /update/{currentUserId}
+- /update/{current_user_id}
   - PUT
   - Body = `User`
   - Update your profile
@@ -28,22 +28,22 @@
   - POST
   - Body = `User`
   - Create a new User
-- /delete/{currentUserId}
+- /delete/{current_user_id}
   - DELETE
   - Delete a user / remove account
-- /change-password/{currentUserId}
+- /change-password/{current_user_id}
   - PUT
-  - Body = {oldPassword, newPassword}
+  - Body = {old_password, new_password}
   - change a users password
-- /block/{blockedId}
+- /block/{blocked_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Block a user
-- /unblock/{blockedId}
+- /unblock/{blocked_id}
   - DELETE
-  - Params = currentUserId
+  - Params = current_user_id
   - Unblock a user
-- /blocked/{currentUserId}
+- /blocked/{current_user_id}
   - GET
   - Get current users blocked list
 
@@ -53,165 +53,165 @@
 
 - /create
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Body = `Group`
   - Create a new group
 - /search
   - GET
-  - Params = currentUserId, keyword
+  - Params = current_user_id, keyword
   - Search your groups
-- /{currentUserId}/all
+- /{current_user_id}/all
   - GET
   - Get all of a users groups
-- /{groupId}
+- /{group_id}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a specific group
-- /{groupId}/update
+- /{group_id}/update
   - PUT
-  - Params = currentUserId
+  - Params = current_user_id
   - Update a groups details
-- /{groupId}/availabilities
+- /{group_id}/availabilities
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a list of group availabilities
-- /{groupId}/availabilities/create
+- /{group_id}/availabilities/create
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Body = `GroupAvailability`
   - Create a groupAvailability
-- /{groupId}/availabilities/remove/{availability_id}
+- /{group_id}/availabilities/remove/{availability_id}
   - DELETE
-  - Params = currentuserId
+  - Params = current_user_id
   - Remove a groupAvailability
-- /{groupId}/events
+- /{group_id}/events
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get all group events
-- /{groupId}/events/create
+- /{group_id}/events/create
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Body = `Event`
   - Create an event
-- /{groupId}/events/{eventId}
+- /{group_id}/events/{event_id}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a specific event
-- /{groupId}/events/{eventId}/update
+- /{group_id}/events/{event_id}/update
   - PUT
-  - Params = currentUserId
+  - Params = current_user_id
   - body = `Event`
   - Update an event
-- /{groupId}/events/{eventId}/cancel
+- /{group_id}/events/{event_id}/cancel
   - DELETE
-  - Params = currentUserId
+  - Params = current_user_id
   - Delete an event
-- /{groupId}/events/{eventId}/participants
+- /{group_id}/events/{event_id}/participants
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get participants for an event
-- /{groupId}/members
+- /{group_id}/members
   - GET
-  - Param = currentUserId
+  - Param = current_user_id
   - Get a list of group members
 
 #### Group Admin Only endpoints
 
-- /{groupId}/update
+- /{group_id}/update
   - PUT
-  - Params = currentUserId
+  - Params = current_user_id
   - Body = `Group`
   - Update a group
-- /{groupId}/members/add/{friendId}
+- /{group_id}/members/add/{friend_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Add a friend to the group
-- /{groupId}/member/remove/{memberId}
+- /{group_id}/member/remove/{member_id}
   - DELETE
-  - Params = currentUserId
+  - Params = current_user_id
   - remove a group member
-- /{groupId}/member/promote/{memberId}
+- /{group_id}/member/promote/{member_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Promote a group member to Admin
-- /{groupId}/member/demote/{memberId}
+- /{group_id}/member/demote/{member_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Demote a current Admin
 
 ### Friendships Endpoints
 
 #### Lead with /friendships
 
-- /{currentUserId}
+- /{current_user_id}
   - GET
   - Your friends List
-- /request/{friendId}
+- /request/{friend_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Request to add a friend
-- /requests/{currentUserId}
+- /requests/{current_user_id}
   - GET
   - Get your friend requests
-- /requests/accept/{requestId}
+- /requests/accept/{request_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Accept a friend request
-- /requests/deny/{requestId}
+- /requests/deny/{request_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Deny a friend request
 
 ### Notifications Endpoints
 
 #### Lead with /notifications
 
-- /{currentUserId}
+- /{current_user_id}
   - GET
   - Get all your notifications
-- /get/{notificationId}
+- /get/{notification_id}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a specific notification
-- /read/{notificationId}
+- /read/{notification_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Mark the notification as read
-- /respond/{notificationId}
+- /respond/{notification_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Respond to a notification
 
 ### Conversations Endpoints
 
 #### lead with /conversations
 
-- /{currentUserId}/all
+- /{current_user_id}/all
   - GET
   - Get all you conversations
-- /{conversationId}
+- /{conversation_id}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get a specific conversation
-- /create/{friendId}
+- /create/{friend_id}
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Create a conversation with a friend
-- /{conversationId}/messages
+- /{conversation_id}/messages
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Get the messages of a conversation
-- /{conversationId}/send
+- /{conversation_id}/send
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Send a message to a conversation
-- /group/{groupId}
+- /group/{group_id}
   - GET
-  - Params = currentUserId
+  - Params = current_user_id
   - Access a group conversation
-- /group/{groupId}/send
+- /group/{group_id}/send
   - POST
-  - Params = currentUserId
+  - Params = current_user_id
   - Send a group message
 
 ### Admin Endpoints
@@ -220,17 +220,17 @@
 
 - /users
   - GET
-  - Params = adminId
+  - Params = admin_id
   - Get all Users
 - /groups
   - GET
-  - Params = adminId
+  - Params = admin_id
   - Get all groups
 - /logs
   - GET
-  - Params = adminId
+  - Params = admin_id
   - Get all Activity Logs
 - /logs/clear
   - DELETE
-  - Params = adminId
+  - Params = admin_id
   - Clear activity logs
