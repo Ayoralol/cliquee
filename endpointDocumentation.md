@@ -79,7 +79,11 @@
   - POST
   - Params = currentUserId
   - Body = `GroupAvailability`
-  - Update a groupAvailability
+  - Create a groupAvailability
+- /{groupId}/availabilities/remove/{availability_id}
+  - DELETE
+  - Params = currentuserId
+  - Remove a groupAvailability
 - /{groupId}/events
   - GET
   - Params = currentUserId
