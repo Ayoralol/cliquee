@@ -1,5 +1,6 @@
 from app.models.notification import Notification
 from app.services.user_service import get_username_by_id_service
+from app.services.friendship_service import accept_friend_request_service, deny_friend_request_service
 from ..extensions import db
 
 def create_notification(user_id, data):
@@ -43,11 +44,17 @@ def respond_to_notification_service(notification_id, current_user_id, response):
     type = notification.type
     if type == 'FRIEND_REQUEST':
         if response.get('ACCEPT'):
+            request_response, request_status_code = accept_friend_request_service(notification.related_id, current_user_id, notification.sender_id)
+            if request_status_code != 200:
+                return request_response, request_status_code
             notification.responded = True
             db.session.commit()
             create_notification(notification.sender_id, {'sender_id': current_user_id, 'type': 'FRIEND_REQUEST_ACCEPTED', 'related_id': notification.related_id, 'message': f'{get_username_by_id_service(current_user_id)} has accepted your friend request!'})
             return {'message': 'Friend request accepted'}, 200
         elif response.get('DENY'):
+            request_response, request_status_code = deny_friend_request_service(notification.related_id, current_user_id, notification.sender_id)
+            if request_status_code != 200:
+                return request_response, request_status_code
             db.session.delete(notification)
             db.session.commit()
             return {'message': 'Friend request declined'}, 200
