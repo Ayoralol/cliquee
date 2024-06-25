@@ -125,3 +125,9 @@ def get_blocked_users_service(current_user_id):
         return jsonify({'error': 'No blocked users found'}), 404
     blocked_users = [block.blocked_id for block in blocks]
     return jsonify({'username': user.username, "first_name": user.first_name, "last_name": user.last_name} for user in blocked_users), 200
+
+def get_username_by_id_service(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    return user.username

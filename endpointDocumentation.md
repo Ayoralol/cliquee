@@ -71,6 +71,10 @@
   - GET
   - Params = current_user_id
   - Get a list of group availabilities
+- /{group_id}/user_availabilities
+  - GET
+  - Params = current_user_id
+  - Get a list of your own availabilities
 - /{group_id}/availabilities/create
   - POST
   - Params = current_user_id

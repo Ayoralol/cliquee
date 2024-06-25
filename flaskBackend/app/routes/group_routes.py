@@ -29,6 +29,11 @@ def get_group_availabilities(group_id):
     current_user_id = request.args.get('current_user_id')
     return get_group_availabilities_service(group_id, current_user_id)
 
+@group_bp.route('/<group_id>/user_availabilities', methods=['GET'])
+def get_user_availabilities(group_id):
+    current_user_id = request.args.get('current_user_id')
+    return get_user_availabilities_service(group_id, current_user_id)
+
 @group_bp.route('/<group_id>/availabilities/create', methods=['POST'])
 def create_group_availability(group_id):
     current_user_id = request.args.get('current_user_id')
