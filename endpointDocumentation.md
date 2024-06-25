@@ -205,13 +205,10 @@
   - POST
   - Params = current_user_id
   - Create a conversation with a friend
-- /{conversation_id}/messages
-  - GET
-  - Params = current_user_id
-  - Get the messages of a conversation
 - /{conversation_id}/send
   - POST
   - Params = current_user_id
+  - Body = "message"
   - Send a message to a conversation
 - /group/{group_id}
   - GET
@@ -220,6 +217,7 @@
 - /group/{group_id}/send
   - POST
   - Params = current_user_id
+  - Body = "message"
   - Send a group message
 
 ### Admin Endpoints
