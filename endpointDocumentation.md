@@ -67,10 +67,6 @@
   - GET
   - Params = current_user_id
   - Get a specific group
-- /{group_id}/update
-  - PUT
-  - Params = current_user_id
-  - Update a groups details
 - /{group_id}/availabilities
   - GET
   - Params = current_user_id
@@ -110,6 +106,14 @@
   - GET
   - Params = current_user_id
   - Get participants for an event
+- /{group_id}/events/{event_id}/join
+  - POST
+  - Params = current_user_id
+  - Join an event
+- /{group_id}/events/{event_id}/leave
+  - DELETE
+  - Params = current_user_id
+  - Leave an event
 - /{group_id}/members
   - GET
   - Param = current_user_id
@@ -126,15 +130,15 @@
   - POST
   - Params = current_user_id
   - Add a friend to the group
-- /{group_id}/member/remove/{member_id}
+- /{group_id}/members/remove/{member_id}
   - DELETE
   - Params = current_user_id
   - remove a group member
-- /{group_id}/member/promote/{member_id}
+- /{group_id}/members/promote/{member_id}
   - POST
   - Params = current_user_id
   - Promote a group member to Admin
-- /{group_id}/member/demote/{member_id}
+- /{group_id}/members/demote/{member_id}
   - POST
   - Params = current_user_id
   - Demote a current Admin

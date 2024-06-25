@@ -1,7 +1,6 @@
-from app.services.block_service import single_block_check
-from flask import Blueprint, request, jsonify
-from sqlalchemy import or_
+from flask import Blueprint, request
 from ..services.user_service import *
+
 user_bp = Blueprint('users', __name__, url_prefix='/users')
 
 @user_bp.route('/<user_id>', methods=['GET'])
