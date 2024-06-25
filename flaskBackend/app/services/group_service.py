@@ -1,6 +1,8 @@
 from app.models.group import Group
+from app.models.event_participant import Event_Participant
 from app.models.group_availability import Group_Availability
 from app.models.user_group import User_Group
+from app.models.event import Event
 from app.services.user_service import get_username_by_id_service
 from ..extensions import db
 
@@ -39,8 +41,8 @@ def get_groups_service(current_user_id):
     return [{'name': group.name, 'description': group.description} for group in groups], 200
 
 def get_group_service(group_id, current_user_id):
-    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
-    if not user_group:
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
         return {'error': 'Group not found'}, 404
     group = Group.query.filter_by(id=group_id).first()
     return {'name': group.name, 'description': group.description}, 200
@@ -49,12 +51,213 @@ def get_group_availabilities_service(group_id, current_user_id):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
     if not user_check:
         return {'error': 'Group not found'}, 404
-    all_availabilities = Group_Availability.query.filter_by(group_id=group_id).all()
-    return [{'username': get_username_by_id_service(availability.user_id), 'day': availability.day, 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in all_availabilities], 200
+    group = Group.query.filter_by(id=group_id).first()
+    return [{'username': get_username_by_id_service(availability.user_id), 'day': availability.day, 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in group.group_availability], 200
 
 def get_user_availabilities_service(group_id, current_user_id):
-    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
-    if not user_group:
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
         return {'error': 'Group not found'}, 404
     group = Group.query.filter_by(id=group_id).first()
     return [{'day': availability.day, 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in group.group_availability], 200
+
+def create_group_availability_service(group_id, current_user_id, data):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    day = data.get('day')
+    start_time = data.get('start_time')
+    end_time = data.get('end_time')
+    if not day or not start_time or not end_time:
+        return {'error': 'Missing availability data'}, 400
+    availability = Group_Availability(group_id=group_id, user_id=current_user_id, day=day, start_time=start_time, end_time=end_time)
+    db.session.add(availability)
+    db.session.commit()
+    return {'message': 'Availability created successfully'}, 200
+
+def remove_group_availability_service(group_id, availability_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    availability = Group_Availability.query.filter_by(id=availability_id).first()
+    if not availability:
+        return {'error': 'Availability not found'}, 404
+    db.session.delete(availability)
+    db.session.commit()
+    return {'message': 'Availability removed successfully'}, 200
+
+def get_group_events_service(group_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    events = Event.query.filter_by(group_id=group_id).all()
+    return [{'name': event.name, 'description': event.description, 'location': event.location, 'start_time': event.start_time, 'end_time': event.end_time} for event in events.events], 200
+
+def create_group_event_service(group_id, current_user_id, data):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    name = data.get('name')
+    description = data.get('description')
+    location = data.get('location')
+    start_time = data.get('start_time')
+    end_time = data.get('end_time')
+    if not name or not description or not location or not start_time or not end_time:
+        return {'error': 'Missing event data'}, 400
+    event = Event(group_id=group_id, name=name, description=description, location=location, start_time=start_time, end_time=end_time)
+    db.session.add(event)
+    db.session.commit()
+    return {'message': 'Event created successfully'}, 200
+
+def get_group_event_service(group_id, event_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return {'error': 'Event not found'}, 404
+    return {'name': event.name, 'description': event.description, 'location': event.location, 'start_time': event.start_time, 'end_time': event.end_time}, 200
+
+
+def update_group_event_service(group_id, event_id, current_user_id, data):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return {'error': 'Event not found'}, 404
+    name = data.get('name')
+    description = data.get('description')
+    location = data.get('location')
+    start_time = data.get('start_time')
+    end_time = data.get('end_time')
+    if name:
+        event.name = name
+    if description:
+        event.description = description
+    if location:
+        event.location = location
+    if start_time:
+        event.start_time = start_time
+    if end_time:
+        event.end_time = end_time
+    db.session.commit()
+    return {'message': 'Event updated successfully'}, 200
+
+def cancel_group_event_service(group_id, event_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return {'error': 'Event not found'}, 404
+    db.session.delete(event)
+    db.session.commit()
+    return {'message': 'Event cancelled successfully'}, 200
+
+def get_event_participants_service(group_id, event_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return {'error': 'Event not found'}, 404
+    if not event.event_participants:
+        return {'error': 'No participants found'}, 404
+    return [{'username': get_username_by_id_service(participant.user_id)} for participant in event.event_participants], 200
+
+def join_group_event_service(group_id, event_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return {'error': 'Event not found'}, 404
+    event_participant = Event_Participant(event_id=event_id, user_id=current_user_id)
+    db.session.add(event_participant)
+    db.session.commit()
+    return {'message': 'Joined event successfully'}, 200
+
+def leave_group_event_service(group_id, event_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        return {'error': 'Event not found'}, 404
+    event_participant = Event_Participant.query.filter_by(event_id=event_id, user_id=current_user_id).first()
+    if not event_participant:
+        return {'error': 'User not found in event'}, 404
+    db.session.delete(event_participant)
+    db.session.commit()
+    return {'message': 'Left event successfully'}, 200
+
+def get_group_members_service(group_id, current_user_id):
+    user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_check:
+        return {'error': 'Group not found'}, 404
+    user_groups = User_Group.query.filter_by(group_id=group_id).all()
+    if not user_groups:
+        return {'error': 'No members found'}, 404
+    return [{'username': get_username_by_id_service(user_group.user_id), 'role': user_group.role} for user_group in user_groups], 200
+
+def update_group_service(group_id, current_user_id, data):
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group or user_group.role != 'ADMIN':
+        return {'error': 'Group not found'}, 404
+    group = Group.query.filter_by(id=group_id).first()
+    if not group:
+        return {'error': 'Group not found'}, 404
+    name = data.get('name')
+    description = data.get('description')
+    if name:
+        group.name = name
+    if description:
+        group.description = description
+    db.session.commit()
+    return {'message': 'Group updated successfully'}, 200
+
+def add_group_member_service(group_id, friend_id, current_user_id):
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group or user_group.role != 'ADMIN':
+        return {'error': 'Group not found'}, 404
+    user_group = User_Group.query.filter_by(user_id=friend_id, group_id=group_id).first()
+    if user_group:
+        return {'error': 'User already in group'}, 400
+    user_group = User_Group(user_id=friend_id, group_id=group_id, role='MEMBER')
+    db.session.add(user_group)
+    db.session.commit()
+    return {'message': 'User added to group successfully'}, 200
+
+def remove_group_member_service(group_id, friend_id, current_user_id):
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group or user_group.role != 'ADMIN':
+        return {'error': 'Group not found'}, 404
+    user_group = User_Group.query.filter_by(user_id=friend_id, group_id=group_id).first()
+    if not user_group:
+        return {'error': 'User not in group'}, 400
+    db.session.delete(user_group)
+    db.session.commit()
+    return {'message': 'User removed from group successfully'}, 200
+
+def promote_group_member_service(group_id, member_id, current_user_id):
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group or user_group.role != 'ADMIN':
+        return {'error': 'Group not found'}, 404
+    user_group = User_Group.query.filter_by(user_id=member_id, group_id=group_id).first()
+    if not user_group:
+        return {'error': 'User not in group'}, 400
+    user_group.role = 'ADMIN'
+    db.session.commit()
+    return {'message': 'User promoted to admin successfully'}, 200
+
+def demote_group_member_service(group_id, member_id, current_user_id):
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group or user_group.role != 'ADMIN':
+        return {'error': 'Group not found'}, 404
+    user_group = User_Group.query.filter_by(user_id=member_id, group_id=group_id).first()
+    if not user_group:
+        return {'error': 'User not in group'}, 400
+    user_group.role = 'MEMBER'
+    db.session.commit()
+    return {'message': 'User demoted to member successfully'}, 200
