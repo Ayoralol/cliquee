@@ -3,7 +3,15 @@ from app.models.user import User
 from app.services.block_service import single_block_check
 from sqlalchemy import or_
 from ..extensions import db
-from flask import jsonify, request
+from flask import jsonify
+
+def login_service(data): #TEMPORARY
+    username = data.get('username')
+    password = data.get('password')
+    user = User.query.filter_by(username=username).first()
+    if not user or not user.check_password(password):
+        return jsonify({'error': 'Invalid username or password'}), 401
+    return jsonify({'id': user.id, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name}), 200
 
 def get_user_by_id_service(user_id, current_user_id):
     user = User.query.filter_by(id=user_id).first()
