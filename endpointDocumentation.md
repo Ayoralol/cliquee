@@ -174,7 +174,7 @@
 
 #### Lead with /notifications
 
-- /{current_user_id}
+- /{current_user_id}/all
   - GET
   - Get all your notifications
 - /get/{notification_id}
