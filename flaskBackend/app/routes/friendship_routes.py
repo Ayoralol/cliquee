@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from ..services.friendship_service import *
 
-friendship_bp = Blueprint('friendship', __name__, url_prefix='/friendships')
+friendship_bp = Blueprint('friendships', __name__, url_prefix='/friendships')
 
 @friendship_bp.route('/<current_user_id>', methods=['GET'])
 def get_friends(current_user_id):
