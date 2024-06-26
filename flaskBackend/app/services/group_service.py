@@ -5,7 +5,7 @@ from app.models.user_group import User_Group
 from app.models.event import Event
 from app.services.user_service import get_username_by_id_service
 from app.services.notification_service import create_notification, create_group_notification
-from app.services.audit_log_service import create_audit_log, create_audit_log_inc_other_user, create_audit_log_inc_related_id
+from app.services.audit_log_service import create_audit_log, create_audit_log_inc_related_id
 from ..extensions import db
 
 def create_group_service(current_user_id, data):
