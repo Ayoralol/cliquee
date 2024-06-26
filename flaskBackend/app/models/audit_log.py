@@ -6,7 +6,7 @@ class Audit_Log(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     action = db.Column(db.String(64))
     details = db.Column(db.String(64))
-    created_at = db.Column(db.DateTime, defailt=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
 
     def __repr__(self):

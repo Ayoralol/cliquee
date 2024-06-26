@@ -7,6 +7,7 @@ from app.models.message import Message
 from app.models.group import Group
 from app.models.group_message import Group_Message
 from app.services.notification_service import create_notification, create_group_notification
+from app.services.audit_log_service import create_audit_log, create_audit_log_inc_other_user, create_audit_log_inc_related_id
 from ..extensions import db
 
 def get_friends_username(current_user_id, conversation):
@@ -28,6 +29,7 @@ def get_all_conversations_service(current_user_id):
     ).all()
     if not conversations:
         return {'message': 'No conversations found'}, 404
+    create_audit_log(current_user_id, 'GET_ALL_CONVERSATIONS')
     return [(get_friends_username(current_user_id, conversation), get_most_recent_message(conversation)) for conversation in conversations], 200
 
 def get_conversation_service(conversation_id, current_user_id):
@@ -36,6 +38,8 @@ def get_conversation_service(conversation_id, current_user_id):
         return {'message': 'Conversation not found'}, 404
     if conversation.user_one_id != current_user_id and conversation.user_two_id != current_user_id:
         return {'message': 'Unauthorized'}, 401
+    audit_id = conversation.user_one_id if conversation.user_two_id == current_user_id else conversation.user_two_id
+    create_audit_log_inc_other_user(current_user_id, 'GET_CONVERSATION', audit_id)
     return {'conversation_id': conversation.id, 'friend_username': get_friends_username(current_user_id, conversation), 'messages': [message.message for message in conversation.messages]}, 200
 
 def create_conversation_service(current_user_id, friend_id):
@@ -55,6 +59,7 @@ def create_conversation_service(current_user_id, friend_id):
         return {'message': 'Conversation already exists'}, 400
     new_conversation = Conversation(user_one_id=current_user_id, user_two_id=friend_id)
     new_conversation.save()
+    create_audit_log_inc_other_user(current_user_id, 'CREATE_CONVERSATION', friend_id)
     return {'conversation_id': new_conversation.id}, 201
 
 def send_message_service(conversation_id, current_user_id, message_content):
@@ -68,6 +73,7 @@ def send_message_service(conversation_id, current_user_id, message_content):
     db.session.add(new_message)
     db.session.commit()
     send_notification(receiver, 'CONVERSATION', current_user_id, conversation_id)
+    create_audit_log_inc_other_user(current_user_id, 'SEND_MESSAGE', receiver)
     return {'message': 'Message sent'}, 201
 
 def get_group_conversation_service(group_id, current_user_id):
@@ -76,6 +82,7 @@ def get_group_conversation_service(group_id, current_user_id):
         return {'message': 'Group not found'}, 404
     if current_user_id not in [member.id for member in group.members]:
         return {'message': 'Unauthorized'}, 401
+    create_audit_log_inc_related_id(current_user_id, group.id, 'GET_GROUP_CONVERSATION')
     return {'group_id': group.id, 'group_name': group.name, 'messages': [message.message for message in group.messages]}, 200
 
 def send_group_message_service(group_id, current_user_id, message_content):
@@ -88,6 +95,7 @@ def send_group_message_service(group_id, current_user_id, message_content):
     db.session.add(new_message)
     db.session.commit()
     send_notification(group_id, 'GROUP', current_user_id, new_message.id)
+    create_audit_log_inc_related_id(current_user_id, group.id, 'SEND_GROUP_MESSAGE')
     return {'message': 'Message sent'}, 201
 
 def send_notification(sender_id, type, receiver_or_group_id, conversation_or_message_id):
