@@ -4,6 +4,7 @@ from app.models.group_availability import Group_Availability
 from app.models.user_group import User_Group
 from app.models.event import Event
 from app.services.user_service import get_username_by_id_service
+from app.services.notification_service import create_notification, create_group_notification
 from ..extensions import db
 
 def create_group_service(current_user_id, data):
@@ -107,6 +108,7 @@ def create_group_event_service(group_id, current_user_id, data):
     event = Event(group_id=group_id, name=name, description=description, location=location, start_time=start_time, end_time=end_time)
     db.session.add(event)
     db.session.commit()
+    create_group_notification(group_id, {'sender_id': current_user_id, 'type': 'GROUP_EVENT', 'related_id': event.id, 'message': f'{get_username_by_id_service(current_user_id)} has created an event in {get_group_name_by_id(group_id)}!'})
     return {'message': 'Event created successfully'}, 200
 
 def get_group_event_service(group_id, event_id, current_user_id):
@@ -117,7 +119,6 @@ def get_group_event_service(group_id, event_id, current_user_id):
     if not event:
         return {'error': 'Event not found'}, 404
     return {'name': event.name, 'description': event.description, 'location': event.location, 'start_time': event.start_time, 'end_time': event.end_time}, 200
-
 
 def update_group_event_service(group_id, event_id, current_user_id, data):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
@@ -227,6 +228,7 @@ def add_group_member_service(group_id, friend_id, current_user_id):
     user_group = User_Group(user_id=friend_id, group_id=group_id, role='MEMBER')
     db.session.add(user_group)
     db.session.commit()
+    create_notification(friend_id, {'sender_id': current_user_id, 'type': 'GROUP_ADD', 'related_id': group_id, 'message': f'{get_username_by_id_service(current_user_id)} has added you to the group {get_group_name_by_id(group_id)}!'})
     return {'message': 'User added to group successfully'}, 200
 
 def remove_group_member_service(group_id, friend_id, current_user_id):
@@ -249,6 +251,7 @@ def promote_group_member_service(group_id, member_id, current_user_id):
         return {'error': 'User not in group'}, 400
     user_group.role = 'ADMIN'
     db.session.commit()
+    create_notification(member_id, {'sender_id': current_user_id, 'type': 'GROUP_PROMOTE', 'related_id': group_id, 'message': f'{get_username_by_id_service(current_user_id)} has promoted you to admin in {get_group_name_by_id(group_id)}!'})
     return {'message': 'User promoted to admin successfully'}, 200
 
 def demote_group_member_service(group_id, member_id, current_user_id):
@@ -261,3 +264,7 @@ def demote_group_member_service(group_id, member_id, current_user_id):
     user_group.role = 'MEMBER'
     db.session.commit()
     return {'message': 'User demoted to member successfully'}, 200
+
+def get_group_name_by_id(group_id):
+    group = Group.query.filter_by(id=group_id).first()
+    return group.name

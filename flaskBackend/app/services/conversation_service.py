@@ -65,9 +65,9 @@ def send_message_service(conversation_id, current_user_id, message_content):
         return {'message': 'Unauthorized'}, 401
     new_message = Message(conversation_id=conversation_id, user_id=current_user_id, message=message_content)
     receiver = conversation.user_one_id if conversation.user_two_id == current_user_id else conversation.user_two_id
-    send_notification(receiver, 'CONVERSATION', current_user_id, conversation_id)
     db.session.add(new_message)
     db.session.commit()
+    send_notification(receiver, 'CONVERSATION', current_user_id, conversation_id)
     return {'message': 'Message sent'}, 201
 
 def get_group_conversation_service(group_id, current_user_id):
@@ -86,8 +86,8 @@ def send_group_message_service(group_id, current_user_id, message_content):
         return {'message': 'Unauthorized'}, 401
     new_message = Group_Message(group_id=group_id, user_id=current_user_id, message=message_content)
     db.session.add(new_message)
-    send_notification(group_id, 'GROUP', current_user_id, new_message.id)
     db.session.commit()
+    send_notification(group_id, 'GROUP', current_user_id, new_message.id)
     return {'message': 'Message sent'}, 201
 
 def send_notification(sender_id, type, receiver_or_group_id, conversation_or_message_id):
