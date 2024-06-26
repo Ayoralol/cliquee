@@ -2,6 +2,7 @@ from app.models.notification import Notification
 from app.models.user_group import User_Group
 from app.services.user_service import get_username_by_id_service
 from app.services.friendship_service import accept_friend_request_service, deny_friend_request_service
+from app.services.audit_log_service import create_audit_log, create_audit_log_inc_other_user, create_audit_log_inc_related_id
 from ..extensions import db
 
 def create_notification(user_id, data):
@@ -21,6 +22,7 @@ def get_all_notifications_service(current_user_id):
     notifications = Notification.query.filter_by(user_id=current_user_id).all()
     if not notifications:
         return {'message': 'No notifications found'}, 404
+    create_audit_log(current_user_id, 'GET_ALL_NOTIFICATIONS')
     return {'notifications': [{'id': notification.id, 'sender': get_username_by_id_service(notification.sender_id), 'type': notification.type, 'related_id': notification.related_id, 'message': notification.message, 'is_read': notification.is_read, 'responded': notification.responded} for notification in notifications]}, 200
 
 def get_notification_service(notification_id, current_user_id):
@@ -31,6 +33,7 @@ def get_notification_service(notification_id, current_user_id):
         return {'message': 'Unauthorized'}, 401
     notification.is_read = True
     db.session.commit()
+    create_audit_log_inc_related_id(current_user_id, notification.related_id, 'GET_NOTIFICATION')
     return {'id': notification.id, 'sender': get_username_by_id_service(notification.sender_id), 'type': notification.type, 'related_id': notification.related_id, 'message': notification.message, 'responded': notification.responded}, 200
 
 def read_notification_service(notification_id, current_user_id):
@@ -41,6 +44,7 @@ def read_notification_service(notification_id, current_user_id):
         return {'message': 'Unauthorized'}, 401
     notification.is_read = True
     db.session.commit()
+    create_audit_log_inc_related_id(current_user_id, notification.related_id, 'READ_NOTIFICATION')
     return {'message': 'Notification read successfully'}, 200
 
 def respond_to_notification_service(notification_id, current_user_id, response):
