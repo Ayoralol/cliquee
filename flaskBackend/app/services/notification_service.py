@@ -1,4 +1,5 @@
 from app.models.notification import Notification
+from app.models.user_group import User_Group
 from app.services.user_service import get_username_by_id_service
 from app.services.friendship_service import accept_friend_request_service, deny_friend_request_service
 from ..extensions import db
@@ -7,7 +8,14 @@ def create_notification(user_id, data):
     notification = Notification(user_id=user_id, sender_id=data.get('sender_id'), type=data.get('type'), related_id=data.get('related_id'), message=data.get('message'))
     db.session.add(notification)
     db.session.commit()
-    return notification
+
+def create_group_notification(group_id, data):
+    user_groups = User_Group.query.filter_by(group_id=group_id).all()
+    group_member_ids = [user_group.user_id for user_group in user_groups]
+    notifications = [Notification(user_id=user_id, sender_id=data.get('sender_id'), type=data.get('type'), related_id=data.get('related_id'), message=data.get('message')) for user_id in group_member_ids]
+    for notification in notifications:
+        db.session.add(notification)
+    db.session.commit()
 
 def get_all_notifications_service(current_user_id):
     notifications = Notification.query.filter_by(user_id=current_user_id).all()
