@@ -1,7 +1,21 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import create_access_token
 from ..services.user_service import *
 
 user_bp = Blueprint('users', __name__, url_prefix='/users')
+
+@user_bp.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    if not username or not password:
+        return jsonify({'error': 'Missing username or password'}), 400
+    user = User.query.filter_by(username=username).first()
+    if user is None or not user.check_password(password):
+        return jsonify({'error': 'Invalid username or password'}), 401
+    access_token = create_access_token(identity=user.id)
+    return jsonify({'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name, 'access_token': access_token}), 200
 
 @user_bp.route('/<user_id>', methods=['GET'])
 def get_user_by_id(user_id):
