@@ -3,7 +3,7 @@ import {User, loginService, registerService} from "../services/userService";
 
 const Landing: Component = () => {
   const user1: User = {
-    username: "user2",
+    username: "user3",
     email: "user2@gmail.com",
     password: "password",
     firstName: "User",

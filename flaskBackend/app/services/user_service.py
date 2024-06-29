@@ -81,6 +81,10 @@ def create_user_service(data):
     last_name = data.get('last_name')
     if not username or not email or not password or not first_name or not last_name:
         return {'error': 'Missing required fields'}, 400
+    if User.query.filter_by(username=username).first():
+        return {'error': 'Username already exists'}, 400
+    if User.query.filter_by(email=email).first():
+        return {'error': 'Email already exists'}, 400
     new_user = User(username=username, email=email, first_name=first_name, last_name=last_name)
     new_user.set_password(password)
     db.session.add(new_user)

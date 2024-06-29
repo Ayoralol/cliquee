@@ -38,7 +38,7 @@ export const registerService = async (user: User) => {
         last_name: user.lastName,
       }),
     });
-    return response.json;
+    return response.json();
   } catch (error) {
     throw error;
   }
