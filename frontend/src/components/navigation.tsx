@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const navigation: Component = () => {
+const Navigation: Component = () => {
   return <div>navigation</div>;
 };
 
-export default navigation;
+export default Navigation;

@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const editProfile: Component = () => {
+const EditProfile: Component = () => {
   return <div>editProfile</div>;
 };
 
-export default editProfile;
+export default EditProfile;

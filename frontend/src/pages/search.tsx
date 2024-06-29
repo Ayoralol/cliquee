@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const search: Component = () => {
+const Search: Component = () => {
   return <div>search</div>;
 };
 
-export default search;
+export default Search;

@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const messagesModal: Component = () => {
+const MessagesModal: Component = () => {
   return <div>messagesModal</div>;
 };
 
-export default messagesModal;
+export default MessagesModal;

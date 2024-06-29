@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const friends: Component = () => {
+const Friends: Component = () => {
   return <div>friends</div>;
 };
 
-export default friends;
+export default Friends;

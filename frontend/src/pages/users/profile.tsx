@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const profile: Component = () => {
+const Profile: Component = () => {
   return <div>profile</div>;
 };
 
-export default profile;
+export default Profile;

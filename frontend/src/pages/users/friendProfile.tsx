@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const friendProfile: Component = () => {
+const FriendProfile: Component = () => {
   return <div>userProfile</div>;
 };
 
-export default friendProfile;
+export default FriendProfile;

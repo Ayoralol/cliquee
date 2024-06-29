@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const editGroup: Component = () => {
+const EditGroup: Component = () => {
   return <div>editGroup</div>;
 };
 
-export default editGroup;
+export default EditGroup;

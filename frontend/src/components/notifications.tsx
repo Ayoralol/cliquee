@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const notifications: Component = () => {
+const Notifications: Component = () => {
   return <div>notifications</div>;
 };
 
-export default notifications;
+export default Notifications;

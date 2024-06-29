@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const groupEventsList: Component = () => {
+const GroupEventsList: Component = () => {
   return <div>groupEventsList</div>;
 };
 
-export default groupEventsList;
+export default GroupEventsList;

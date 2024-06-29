@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const admin: Component = () => {
+const Admin: Component = () => {
   return <div>admin</div>;
 };
 
-export default admin;
+export default Admin;

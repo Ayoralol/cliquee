@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const loginModal: Component = () => {
+const LoginModal: Component = () => {
   return <div>loginModal</div>;
 };
 
-export default loginModal;
+export default LoginModal;

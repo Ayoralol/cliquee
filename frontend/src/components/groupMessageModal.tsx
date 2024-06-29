@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
-const groupMessageModal: Component = () => {
+const GroupMessageModal: Component = () => {
   return <div>groupMessageModal</div>;
 };
 
-export default groupMessageModal;
+export default GroupMessageModal;
