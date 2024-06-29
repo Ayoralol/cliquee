@@ -17,7 +17,7 @@ export const loginService = async (username: string, password: string) => {
       },
       body: JSON.stringify({username: username, password: password}),
     });
-    return response.json;
+    return await response.json();
   } catch (error) {
     throw error;
   }
