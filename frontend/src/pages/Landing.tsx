@@ -1,5 +1,5 @@
 import {Component} from "solid-js";
-import {User, loginService, registerService} from "../services/userService";
+import {User, loginService, registerService} from "../services/UserService";
 
 const Landing: Component = () => {
   const user1: User = {

@@ -1,5 +1,5 @@
 import {createContext, createEffect, createSignal, useContext} from "solid-js";
-import {User} from "../services/userService";
+import {User} from "../services/UserService";
 
 interface UserContext {
   user: () => User | null;

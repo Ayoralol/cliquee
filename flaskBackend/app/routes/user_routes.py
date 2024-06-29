@@ -89,7 +89,7 @@ def unblock_user(blocked_id):
     response, status_code = unblock_user_service(blocked_id, current_user_id)
     return jsonify(response), status_code
 
-@user_bp.route('/blocked/', methods=['GET'])
+@user_bp.route('/blocked', methods=['GET'])
 @jwt_required()
 def get_blocked_users():
     current_user_id = get_jwt_identity()

@@ -5,14 +5,6 @@ from app.services.audit_log_service import create_audit_log, create_audit_log_in
 from sqlalchemy import or_
 from ..extensions import db
 
-def login_service(data): #TEMPORARY
-    username = data.get('username')
-    password = data.get('password')
-    user = User.query.filter_by(username=username).first()
-    if not user or not user.check_password(password):
-        return {'error': 'Invalid username or password'}, 401
-    return {'id': user.id, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name}, 200
-
 def get_user_by_id_service(user_id, current_user_id):
     user = User.query.filter_by(id=user_id).first()
     if not user:
@@ -55,7 +47,7 @@ def search_users_service(current_user_id, keyword):
     if not users:
         return {'error': 'No users found'}, 404
     create_audit_log_inc_related_id(current_user_id, keyword, 'SEARCH_USERS')
-    return [{'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name} for user in users], 200
+    return {"users": [{'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name} for user in users]}, 200
 
 def update_user_service(current_user_id, data):
     user = User.query.filter_by(id=current_user_id).first()
@@ -140,7 +132,7 @@ def get_blocked_users_service(current_user_id):
         return {'error': 'No blocked users found'}, 404
     blocked_users = [block.blocked_id for block in blocks]
     create_audit_log(current_user_id, 'GET_BLOCKED_USERS')
-    return [{'username': user.username, "first_name": user.first_name, "last_name": user.last_name} for user in blocked_users], 200
+    return {"blocked_users": [{'username': user.username, "first_name": user.first_name, "last_name": user.last_name} for user in blocked_users]}, 200
 
 def get_username_by_id_service(user_id):
     user = User.query.filter_by(id=user_id).first()

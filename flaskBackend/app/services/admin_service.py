@@ -10,7 +10,7 @@ def get_all_users_service(admin_id):
         return {'message': 'Unauthorized'}, 404
     users = User.query.all()
     create_audit_log_service(admin_id, 'GET_ALL_USERS')
-    return [{'id': user.id, 'username': user.username, 'email': user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'created_at': user.created_at, 'updated_at': user.created_at} for user in users], 200
+    return {'users': [{'id': user.id, 'username': user.username, 'email': user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'created_at': user.created_at, 'updated_at': user.created_at} for user in users]}, 200
 
 def get_all_groups_service(admin_id):
     admin = User.query.get(admin_id)
@@ -18,7 +18,7 @@ def get_all_groups_service(admin_id):
         return {'message': 'Unauthorized'}, 404
     groups = Group.query.all()
     create_audit_log_service(admin_id, 'GET_ALL_GROUPS')
-    return [{'id': group.id, 'name': group.name,'description': group.description, 'created_at': group.created_at, 'updated_at': group.created_at, 'members': [{'member_id': member.id, 'member_username': member.username} for member in group.members]} for group in groups], 200
+    return {'groups': [{'id': group.id, 'name': group.name, 'description': group.description, 'created_at': group.created_at, 'updated_at': group.created_at, 'members': [{'member_id': member.id, 'member_username': member.username} for member in group.members]} for group in groups]}, 200
 
 def get_logs_service(admin_id):
     admin = User.query.get(admin_id)
@@ -26,7 +26,7 @@ def get_logs_service(admin_id):
         return {'message': 'Unauthorized'}, 404
     logs = Audit_Log.query.all()
     create_audit_log_service(admin_id, 'GET_AUDIT_LOGS')
-    return {[{'id': log.id, 'user_id': log.user_id, 'action': log.action, 'details': log.details, 'created_at': log.created_at} for log in logs]}, 200
+    return {'logs': [{'id': log.id, 'user_id': log.user_id, 'action': log.action, 'details': log.details, 'created_at': log.created_at} for log in logs]}, 200
 
 def clear_logs_service(admin_id):
     admin = User.query.get(admin_id)

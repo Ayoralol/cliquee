@@ -34,7 +34,7 @@ def search_groups_service(current_user_id, keyword):
     if not groups:
         return {'error': 'No groups found'}, 404
     create_audit_log_inc_related_id(current_user_id, keyword, 'SEARCH_GROUPS')
-    return [{'name': group.name, 'description': group.description} for group in groups], 200
+    return {"groups": [{'name': group.name, 'description': group.description} for group in groups]}, 200
 
 def get_groups_service(current_user_id):
     user_groups = User_Group.query.filter_by(user_id=current_user_id).all()
@@ -43,7 +43,7 @@ def get_groups_service(current_user_id):
     if not groups:
         return {'error': 'No groups found'}, 404
     create_audit_log(current_user_id, 'GET_GROUPS')
-    return [{'name': group.name, 'description': group.description} for group in groups], 200
+    return {"groups": [{'name': group.name, 'description': group.description} for group in groups]}, 200
 
 def get_group_service(group_id, current_user_id):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
@@ -102,7 +102,7 @@ def get_group_events_service(group_id, current_user_id):
         return {'error': 'Group not found'}, 404
     events = Event.query.filter_by(group_id=group_id).all()
     create_audit_log_inc_related_id(current_user_id, group_id, 'GET_GROUP_EVENTS')
-    return [{'name': event.name, 'description': event.description, 'location': event.location, 'start_time': event.start_time, 'end_time': event.end_time} for event in events.events], 200
+    return {"events": [{'name': event.name, 'description': event.description, 'location': event.location, 'start_time': event.start_time, 'end_time': event.end_time} for event in events.events]}, 200
 
 def create_group_event_service(group_id, current_user_id, data):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
@@ -180,7 +180,7 @@ def get_event_participants_service(group_id, event_id, current_user_id):
     if not event.event_participants:
         return {'error': 'No participants found'}, 404
     create_audit_log_inc_related_id(current_user_id, event_id, 'GET_EVENT_PARTICIPANTS')
-    return [{'username': get_username_by_id_service(participant.user_id)} for participant in event.event_participants], 200
+    return {"participants": [{'username': get_username_by_id_service(participant.user_id)} for participant in event.event_participants]}, 200
 
 def join_group_event_service(group_id, event_id, current_user_id):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
@@ -218,7 +218,7 @@ def get_group_members_service(group_id, current_user_id):
     if not user_groups:
         return {'error': 'No members found'}, 404
     create_audit_log_inc_related_id(current_user_id, group_id, 'GET_GROUP_MEMBERS')
-    return [{'username': get_username_by_id_service(user_group.user_id), 'role': user_group.role} for user_group in user_groups], 200
+    return {"members": [{'username': get_username_by_id_service(user_group.user_id), 'role': user_group.role} for user_group in user_groups]}, 200
 
 def update_group_service(group_id, current_user_id, data):
     user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
