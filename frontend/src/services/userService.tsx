@@ -6,6 +6,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   created_at?: string;
+  accessToken?: string;
 }
 
 export const loginService = async (username: string, password: string) => {

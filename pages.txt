@@ -1,4 +1,4 @@
-/ - Home page
+/ - Landing
 
 /login - Either make a /login or a modal for the login
 /register - same as above
