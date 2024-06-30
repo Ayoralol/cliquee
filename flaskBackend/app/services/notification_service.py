@@ -55,7 +55,7 @@ def respond_to_notification_service(notification_id, current_user_id, response):
         return {'message': 'Unauthorized'}, 401
     type = notification.type
     if type == 'FRIEND_REQUEST':
-        if response.get('ACCEPT'):
+        if response.get('response') == 'ACCEPT':
             request_response, request_status_code = accept_friend_request_service(notification.related_id, current_user_id, notification.sender_id)
             if request_status_code != 200:
                 return request_response, request_status_code
@@ -63,7 +63,7 @@ def respond_to_notification_service(notification_id, current_user_id, response):
             db.session.commit()
             create_notification(notification.sender_id, {'sender_id': current_user_id, 'type': 'FRIEND_REQUEST_ACCEPTED', 'related_id': notification.related_id, 'message': f'{get_username_by_id_service(current_user_id)} has accepted your friend request!'})
             return {'message': 'Friend request accepted'}, 200
-        elif response.get('DENY'):
+        elif response.get('response') == 'DENY':
             request_response, request_status_code = deny_friend_request_service(notification.related_id, current_user_id, notification.sender_id)
             if request_status_code != 200:
                 return request_response, request_status_code
