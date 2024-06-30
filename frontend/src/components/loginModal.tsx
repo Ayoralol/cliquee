@@ -18,6 +18,7 @@ const LoginModal: Component = () => {
       const response = await loginService(username(), password());
       console.log(response);
       const loggedUser = {
+        id: response.id,
         username: response.username,
         firstName: response.first_name,
         lastName: response.last_name,

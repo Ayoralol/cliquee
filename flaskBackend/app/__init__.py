@@ -16,6 +16,7 @@ def create_app():
 
     with app.app_context():
         from .models import audit_log, block, conversation, event_comment, event_participant, event, friend_request, friendship, group_availability, group_message, group, message, notification, user_group, user
+        db.drop_all()
         db.create_all()
         app.register_blueprint(user_bp)
 

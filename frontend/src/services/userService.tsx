@@ -6,9 +6,11 @@ export interface User {
   firstName?: string;
   lastName?: string;
   created_at?: string;
+  updated_at?: string;
 }
 
 export interface LoggedUser {
+  id: number;
   username: string;
   firstName: string;
   lastName: string;
@@ -51,9 +53,9 @@ export const registerService = async (user: User) => {
   }
 };
 
-export const getUserService = async (id: number, accessToken: string) => {
+export const getUserService = async (userId: number, accessToken: string) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${id}`, {
+    const response = await fetch(`http://localhost:5000/users/${userId}`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${accessToken}`,
