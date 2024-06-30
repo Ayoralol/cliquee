@@ -10,7 +10,7 @@ from ..extensions import db
 def get_friends_service(current_user_id):
     friends = Friendship.query.filter_by(user_id=current_user_id).all()
     create_audit_log(current_user_id, 'GET_FRIENDS')
-    return {'friends': [{'username': friend.friend.username, 'first_name': friend.first_name, 'last_name': friend.last_name} for friend in friends]}, 200
+    return {'friends': [{'id': friend.id, 'username': friend.friend.username, 'first_name': friend.first_name, 'last_name': friend.last_name} for friend in friends]}, 200
 
 def send_friend_request_service(friend_id, current_user_id):
     friend = User.query.filter_by(id=friend_id).first()
@@ -26,7 +26,7 @@ def send_friend_request_service(friend_id, current_user_id):
 def get_friend_requests_service(current_user_id):
     friend_requests = Friend_Request.query.filter_by(receiver_id=current_user_id).all()
     create_audit_log(current_user_id, 'GET_FRIEND_REQUESTS')
-    return {'friend_requests': [{'request_id': request.id,'username': request.sender_id.username, 'first_name': request.user.first_name, 'last_name': request.user.last_name} for request in friend_requests]}, 200
+    return {'friend_requests': [{'request_id': request.id, 'username': request.sender_id.username, 'first_name': request.user.first_name, 'last_name': request.user.last_name} for request in friend_requests]}, 200
 
 def accept_friend_request_service(request_id, current_user_id, friend_id):
     friend_request = Friend_Request.query.filter_by(id=request_id).first()

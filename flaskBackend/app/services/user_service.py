@@ -12,7 +12,7 @@ def get_user_by_id_service(user_id, current_user_id):
     if single_block_check(user.id, current_user_id):
         return {'error': 'User not found'}, 404
     create_audit_log_inc_other_user(current_user_id, user_id, 'GET_USER_BY_ID')
-    return {'username': user.username, "first_name": user.first_name, "last_name": user.last_name}, 200
+    return {'id': user.id,'username': user.username, "first_name": user.first_name, "last_name": user.last_name}, 200
 
 def get_user_by_username_service(username, current_user_id):
     user = User.query.filter_by(username=username).first()
@@ -21,7 +21,7 @@ def get_user_by_username_service(username, current_user_id):
     if single_block_check(user.id, current_user_id):
         return {'error': 'User not found'}, 404
     create_audit_log_inc_other_user(current_user_id, username, 'GET_USER_BY_USERNAME')
-    return {'username': user.username, "first_name": user.first_name, "last_name": user.last_name}, 200
+    return {'id': user.id,'username': user.username, "first_name": user.first_name, "last_name": user.last_name}, 200
 
 def get_user_by_email_service(email, current_user_id):
     user = User.query.filter_by(email=email).first()
@@ -30,7 +30,7 @@ def get_user_by_email_service(email, current_user_id):
     if single_block_check(user.id, current_user_id):
         return {'error': 'User not found'}, 404
     create_audit_log_inc_other_user(current_user_id, email, 'GET_USER_BY_EMAIL')
-    return {'username': user.username, "first_name": user.first_name, "last_name": user.last_name}, 200
+    return {'id': user.id,'username': user.username, "first_name": user.first_name, "last_name": user.last_name}, 200
 
 def search_users_service(current_user_id, keyword):
     if not keyword:
@@ -47,7 +47,7 @@ def search_users_service(current_user_id, keyword):
     if not users:
         return {'error': 'No users found'}, 404
     create_audit_log_inc_related_id(current_user_id, keyword, 'SEARCH_USERS')
-    return {"users": [{'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name} for user in users]}, 200
+    return {"users": [{'id': user.id,'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name} for user in users]}, 200
 
 def update_user_service(current_user_id, data):
     user = User.query.filter_by(id=current_user_id).first()
@@ -132,7 +132,7 @@ def get_blocked_users_service(current_user_id):
         return {'error': 'No blocked users found'}, 404
     blocked_users = [block.blocked_id for block in blocks]
     create_audit_log(current_user_id, 'GET_BLOCKED_USERS')
-    return {"blocked_users": [{'username': user.username, "first_name": user.first_name, "last_name": user.last_name} for user in blocked_users]}, 200
+    return {"blocked_users": [{'id': user.id,'username': user.username, "first_name": user.first_name, "last_name": user.last_name} for user in blocked_users]}, 200
 
 def get_username_by_id_service(user_id):
     user = User.query.filter_by(id=user_id).first()

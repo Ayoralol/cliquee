@@ -43,7 +43,7 @@ def get_conversation_service(conversation_id, current_user_id):
     audit_id = conversation.user_one_id if conversation.user_two_id == current_user_id else conversation.user_two_id
     create_audit_log_inc_other_user(current_user_id, 'GET_CONVERSATION', audit_id)
     messages = Message.query.filter_by(conversation_id=conversation_id).all()
-    return {'conversation_id': conversation.id, 'friend_username': get_friends_username(current_user_id, conversation), 'messages': [{'username': get_username_by_id_service(message.sender_id), 'message': message.message, 'sender': check_sender(get_username_by_id_service(message.sender_id), user_username)} for message in messages]}, 200
+    return {'id': conversation.id, 'friend_username': get_friends_username(current_user_id, conversation), 'messages': [{'username': get_username_by_id_service(message.sender_id), 'message': message.message, 'sender': check_sender(get_username_by_id_service(message.sender_id), user_username)} for message in messages]}, 200
 
 def create_conversation_service(current_user_id, friend_id):
     if current_user_id == friend_id:

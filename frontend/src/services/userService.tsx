@@ -125,3 +125,112 @@ export const searchUsersService = async (
     throw error;
   }
 };
+
+export const updateUserService = async (user: User, accessToken: string) => {
+  try {
+    const response = await fetch(`http://localhost:5000/users/update`, {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    return await response.json();
+  } catch (error) {}
+};
+
+export const deleteUserService = async (accessToken: string) => {
+  try {
+    const response = await fetch(`http://localhost:5000/users/delete`, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const changePasswordService = async (
+  oldPassword: string,
+  newPassword: string,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/users/change-password`,
+      {
+        method: "PUT",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({oldPassword, newPassword}),
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const blockUserService = async (
+  blockedId: number,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/users/block/${blockedId}`,
+      {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unblockUserService = async (
+  blockedId: number,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/users/unblock/${blockedId}`,
+      {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getBlockedUsersService = async (accessToken: string) => {
+  try {
+    const response = await fetch(`http://localhost:5000/users/blocked`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
