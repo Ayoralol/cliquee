@@ -9,6 +9,15 @@ const Navigation: Component = () => {
       <A href="/">
         <button>Home</button>
       </A>
+      <A href="/profile">
+        <button>Profile</button>
+      </A>
+      <A href="/groups">
+        <button>Groups</button>
+      </A>
+      <A href="/admin">
+        <button>Admin</button>
+      </A>
       <SearchBar />
       <LoginModal />
     </div>

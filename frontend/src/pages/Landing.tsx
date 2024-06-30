@@ -1,48 +1,20 @@
-import {Component, createSignal} from "solid-js";
-import {getUserByUsernameService} from "../services/UserService";
-import {useUser} from "../context/UserProvider";
-
-interface displayUser {
-  username: string;
-  firstName: string;
-  lastName: string;
-}
+import {A} from "@solidjs/router";
+import {Component} from "solid-js";
 
 const Landing: Component = () => {
-  const [display, setDisplay] = createSignal<displayUser | null>(null);
-  const {user} = useUser() ?? {};
-
-  const loadUser = async (e: Event) => {
-    e.preventDefault();
-    try {
-      const currentUser = user();
-      const accessToken = currentUser?.accessToken;
-      if (!accessToken) {
-        throw new Error("No access token");
-      }
-      const response = await getUserByUsernameService("user2", accessToken);
-      setDisplay({
-        username: response.username,
-        firstName: response.first_name,
-        lastName: response.last_name,
-      });
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <div>
-      LANDING PAGE
-      <button onClick={(e) => loadUser(e)}>LOAD USER INFO</button>
-      {display() !== null && (
-        <div>
-          <p>Username: {display()?.username}</p>
-          <p>First Name: {display()?.firstName}</p>
-          <p>Last Name: {display()?.lastName}</p>
-        </div>
-      )}
+    <div class="flex-column">
+      <h1>Welcome to Cliquee!</h1>
+      <p class="center-text">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Error quam
+        perferendis hic nemo nostrum repellendus ea qui fuga. Nesciunt dicta
+        accusantium alias beatae. Consectetur repellendus soluta dolorum? Nulla
+        necessitatibus, mollitia totam fuga eaque sed consequatur! Animi cum
+        amet praesentium voluptas!
+      </p>
+      <A href="/register" class="marg-20">
+        <button>Create Account!</button>
+      </A>
     </div>
   );
 };
