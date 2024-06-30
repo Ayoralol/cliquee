@@ -1,9 +1,9 @@
 import {createContext, createEffect, createSignal, useContext} from "solid-js";
-import {User} from "../services/UserService";
+import {LoggedUser} from "../services/UserService";
 
 interface UserContext {
-  user: () => User | null;
-  setUser: (user: User | null) => void;
+  user: () => LoggedUser | null;
+  setUser: (user: LoggedUser | null) => void;
   isLoggedIn: () => boolean;
   setIsLoggedIn: (value: boolean) => void;
 }
@@ -11,7 +11,7 @@ interface UserContext {
 const UserContext = createContext<UserContext>();
 
 export function UserProvider(props: {children: any}) {
-  const [user, setUser] = createSignal<User | null>(
+  const [user, setUser] = createSignal<LoggedUser | null>(
     JSON.parse(localStorage.getItem("user") || "null")
   );
   const [isLoggedIn, setIsLoggedIn] = createSignal<boolean>(

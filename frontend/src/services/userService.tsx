@@ -6,7 +6,13 @@ export interface User {
   firstName?: string;
   lastName?: string;
   created_at?: string;
-  accessToken?: string;
+}
+
+export interface LoggedUser {
+  username: string;
+  firstName: string;
+  lastName: string;
+  accessToken: string;
 }
 
 export const loginService = async (username: string, password: string) => {
@@ -40,6 +46,81 @@ export const registerService = async (user: User) => {
       }),
     });
     return response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserService = async (id: number, accessToken: string) => {
+  try {
+    const response = await fetch(`http://localhost:5000/users/${id}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserByUsernameService = async (
+  username: string,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/users/username/${username}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserByEmailService = async (
+  email: string,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(`http://localhost:5000/users/email/${email}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const searchUsersService = async (
+  query: string,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/users/search?keyword=${query}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return await response.json();
   } catch (error) {
     throw error;
   }
