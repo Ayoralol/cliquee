@@ -10,21 +10,44 @@
   box-sizing: border-box;
 }
 
-.container {
+.page {
   height: 100vh;
   width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #f0f0f0;
+}
+
+.container {
+  height: 100vh;
+  width: 70vw;
   padding: 10px;
+}
+
+.cont {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
+  padding: 20px;
   align-items: center;
   background-color: #dadada;
   color: #000;
   height: 50px;
   border-radius: 10px;
+  width: 100%;
+}
+
+.nav-btns {
+  display: flex;
+  justify-content: space-around;
+  width: 40%;
 }
 
 button {
@@ -52,7 +75,7 @@ button:hover {
   background-color: #dadada;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
-  z-index: 1;
+  z-index: 2;
   justify-content: center;
   align-items: center;
 }
@@ -65,6 +88,16 @@ button:hover {
   padding: 5px;
 }
 
+.modal-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
 .close {
   align-self: flex-end;
 }
@@ -72,8 +105,6 @@ button:hover {
 .flex-column {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 input {
@@ -87,6 +118,47 @@ input {
   margin: 20px;
 }
 
-.center-text {
+.text-center {
   text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.landing-page {
+  width: 50vw;
+}
+
+.row {
+  margin: 20px 0;
+}
+
+.cont-1 {
+  width: 100%;
+}
+
+.cont-2 {
+  width: 50%;
+}
+
+.cont-4 {
+  width: 25%;
+}
+
+.cont-5 {
+  width: 20%;
+}
+
+.cont-10 {
+  width: 10%;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.all-margin > * {
+  margin: 5px;
 }

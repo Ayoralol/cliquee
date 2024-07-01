@@ -1,8 +1,7 @@
 from app.models.notification import Notification
 from app.models.user_group import User_Group
 from app.services.user_service import get_username_by_id_service
-from app.services.friendship_service import accept_friend_request_service, deny_friend_request_service
-from app.services.audit_log_service import create_audit_log, create_audit_log_inc_other_user, create_audit_log_inc_related_id
+from app.services.audit_log_service import create_audit_log, create_audit_log_inc_related_id
 from ..extensions import db
 
 def create_notification(user_id, data):
@@ -48,6 +47,7 @@ def read_notification_service(notification_id, current_user_id):
     return {'message': 'Notification read successfully'}, 200
 
 def respond_to_notification_service(notification_id, current_user_id, response):
+    from app.services.friendship_service import accept_friend_request_service, deny_friend_request_service
     notification = Notification.query.filter_by(id=notification_id).first()
     if not notification:
         return {'message': 'Notification not found'}, 404

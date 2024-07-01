@@ -1,3 +1,4 @@
+from datetime import datetime
 from app.models.group import Group
 from app.models.event_participant import Event_Participant
 from app.models.group_availability import Group_Availability
@@ -16,7 +17,7 @@ def create_group_service(current_user_id, data):
     group = Group(name=name, description=description)
     db.session.add(group)
     db.session.commit()
-    user_group = User_Group(user_id=current_user_id, group_id=group.id, role='ADMIN')
+    user_group = User_Group(user_id=current_user_id, group_id=group.id, role='ADMIN', created_at=datetime.now())
     db.session.add(user_group)
     db.session.commit()
     create_audit_log_inc_related_id(current_user_id, group.id, 'CREATE_GROUP')
@@ -59,7 +60,7 @@ def get_group_availabilities_service(group_id, current_user_id):
         return {'error': 'Group not found'}, 404
     group = Group.query.filter_by(id=group_id).first()
     create_audit_log_inc_related_id(current_user_id, group_id, 'GET_GROUP_AVAILABILITIES')
-    return [{'id': availability.id, 'username': get_username_by_id_service(availability.user_id), 'day': availability.day, 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in group.group_availability], 200
+    return [{'id': availability.id, 'username': get_username_by_id_service(availability.user_id), 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in group.group_availability], 200
 
 def get_user_availabilities_service(group_id, current_user_id):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
@@ -67,7 +68,7 @@ def get_user_availabilities_service(group_id, current_user_id):
         return {'error': 'Group not found'}, 404
     group = Group.query.filter_by(id=group_id).first()
     create_audit_log_inc_related_id(current_user_id, group_id, 'GET_USER_AVAILABILITIES')
-    return [{'id': availability.id, 'day': availability.day, 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in group.group_availability], 200
+    return [{'id': availability.id, 'start_time': availability.start_time, 'end_time': availability.end_time} for availability in group.group_availability], 200
 
 def create_group_availability_service(group_id, current_user_id, data):
     user_check = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
@@ -78,7 +79,7 @@ def create_group_availability_service(group_id, current_user_id, data):
     end_time = data.get('end_time')
     if not day or not start_time or not end_time:
         return {'error': 'Missing availability data'}, 400
-    availability = Group_Availability(group_id=group_id, user_id=current_user_id, day=day, start_time=start_time, end_time=end_time)
+    availability = Group_Availability(group_id=group_id, user_id=current_user_id, start_time=start_time, end_time=end_time)
     db.session.add(availability)
     db.session.commit()
     create_audit_log_inc_related_id(current_user_id, group_id, 'CREATE_GROUP_AVAILABILITY')
@@ -244,7 +245,7 @@ def add_group_member_service(group_id, friend_id, current_user_id):
     user_group = User_Group.query.filter_by(user_id=friend_id, group_id=group_id).first()
     if user_group:
         return {'error': 'User already in group'}, 400
-    user_group = User_Group(user_id=friend_id, group_id=group_id, role='MEMBER')
+    user_group = User_Group(user_id=friend_id, group_id=group_id, role='MEMBER', created_at=datetime.now())
     db.session.add(user_group)
     db.session.commit()
     create_notification(friend_id, {'sender_id': current_user_id, 'type': 'GROUP_ADD', 'related_id': group_id, 'message': f'{get_username_by_id_service(current_user_id)} has added you to the group {get_group_name_by_id(group_id)}!'})

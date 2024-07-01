@@ -4,9 +4,11 @@ import Navigation from "./components/Navigation";
 
 const App: Component<any> = (props) => {
   return (
-    <div class="container">
-      <Navigation />
-      {props.children}
+    <div class="page">
+      <div class="container flex-column">
+        <Navigation />
+        <div class="cont">{props.children}</div>
+      </div>
     </div>
   );
 };

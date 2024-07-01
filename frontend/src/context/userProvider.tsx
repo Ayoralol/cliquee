@@ -23,6 +23,7 @@ export function UserProvider(props: {children: any}) {
       localStorage.setItem("user", JSON.stringify(user()));
     } else {
       localStorage.removeItem("user");
+      setUser(null);
     }
   });
 

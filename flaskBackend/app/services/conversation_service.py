@@ -1,11 +1,12 @@
 from flask import request
-from sqlalchemy import or_
+from sqlalchemy import and_, or_
 from app.models.conversation import Conversation
 from app.models.notification import Notification
 from app.models.user import User
 from app.models.message import Message
 from app.models.group import Group
 from app.models.group_message import Group_Message
+from app.models.user_group import User_Group
 from app.services.notification_service import create_notification, create_group_notification
 from app.services.audit_log_service import create_audit_log, create_audit_log_inc_other_user, create_audit_log_inc_related_id
 from app.services.user_service import get_username_by_id_service
@@ -41,28 +42,31 @@ def get_conversation_service(conversation_id, current_user_id):
     if conversation.user_one_id != current_user_id and conversation.user_two_id != current_user_id:
         return {'message': 'Unauthorized'}, 401
     audit_id = conversation.user_one_id if conversation.user_two_id == current_user_id else conversation.user_two_id
-    create_audit_log_inc_other_user(current_user_id, 'GET_CONVERSATION', audit_id)
+    create_audit_log_inc_other_user(current_user_id, audit_id, 'GET_CONVERSATION')
     messages = Message.query.filter_by(conversation_id=conversation_id).all()
-    return {'id': conversation.id, 'friend_username': get_friends_username(current_user_id, conversation), 'messages': [{'username': get_username_by_id_service(message.sender_id), 'message': message.message, 'sender': check_sender(get_username_by_id_service(message.sender_id), user_username)} for message in messages]}, 200
+    return {'id': conversation.id, 'friend_username': get_friends_username(current_user_id, conversation), 'messages': [{'username': get_username_by_id_service(message.user_id), 'message': message.message, 'sender': check_sender(get_username_by_id_service(message.user_id), user_username)} for message in messages]}, 200
 
 def create_conversation_service(current_user_id, friend_id):
     if current_user_id == friend_id:
         return {'message': 'Cannot create conversation with yourself'}, 400
     conversation = Conversation.query.filter(
-        or_(
-            Conversation.user_one_id == current_user_id,
-            Conversation.user_two_id == current_user_id
-        ),
-        or_(
-            Conversation.user_one_id == friend_id,
-            Conversation.user_two_id == friend_id
+        and_(
+            or_(
+                Conversation.user_one_id == current_user_id,
+                Conversation.user_two_id == current_user_id
+            ),
+            or_(
+                Conversation.user_one_id == friend_id,
+                Conversation.user_two_id == friend_id
+            )
         )
     ).first()
     if conversation:
         return {'message': 'Conversation already exists'}, 400
     new_conversation = Conversation(user_one_id=current_user_id, user_two_id=friend_id)
-    new_conversation.save()
-    create_audit_log_inc_other_user(current_user_id, 'CREATE_CONVERSATION', friend_id)
+    db.session.add(new_conversation)
+    db.session.commit()
+    create_audit_log_inc_other_user(current_user_id, friend_id, 'CREATE_CONVERSATION')
     return {'conversation_id': new_conversation.id}, 201
 
 def send_message_service(conversation_id, current_user_id, message_content):
@@ -76,25 +80,25 @@ def send_message_service(conversation_id, current_user_id, message_content):
     db.session.add(new_message)
     db.session.commit()
     send_notification(receiver, 'CONVERSATION', current_user_id, conversation_id)
-    create_audit_log_inc_other_user(current_user_id, 'SEND_MESSAGE', receiver)
+    create_audit_log_inc_other_user(current_user_id, receiver, 'SEND_MESSAGE')
     return {'message': 'Message sent'}, 201
 
 def get_group_conversation_service(group_id, current_user_id):
     group = Group.query.get(group_id)
-    user_username = get_username_by_id_service(current_user_id)
-    if not group:
-        return {'message': 'Group not found'}, 404
-    if current_user_id not in [member.id for member in group.members]:
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group:
         return {'message': 'Unauthorized'}, 401
+    user_username = get_username_by_id_service(current_user_id)
     create_audit_log_inc_related_id(current_user_id, group.id, 'GET_GROUP_CONVERSATION')
     messages = Group_Message.query.filter_by(group_id=group_id).all()
+    if not messages:
+        return {'group_id': group.id, 'group_name': group.name, 'messages': []}, 200
     return {'group_id': group.id, 'group_name': group.name, 'messages': [{'username': get_username_by_id_service(message.user_id), 'message': message.message, 'sender': check_sender(message.user_id, user_username)} for message in messages]}, 200
 
 def send_group_message_service(group_id, current_user_id, message_content):
     group = Group.query.get(group_id)
-    if not group:
-        return {'message': 'Group not found'}, 404
-    if current_user_id not in [member.id for member in group.members]:
+    user_group = User_Group.query.filter_by(user_id=current_user_id, group_id=group_id).first()
+    if not user_group:
         return {'message': 'Unauthorized'}, 401
     new_message = Group_Message(group_id=group_id, user_id=current_user_id, message=message_content)
     db.session.add(new_message)

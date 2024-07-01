@@ -15,7 +15,7 @@ def login():
     if user is None or not user.check_password(password):
         return jsonify({'error': 'Invalid username or password'}), 401
     access_token = create_access_token(identity=user.id)
-    return jsonify({'id': user.id, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name, 'access_token': access_token}), 200
+    return jsonify({'id': user.id, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'role': user.role, 'access_token': access_token}), 200
 
 @user_bp.route('/<user_id>', methods=['GET'])
 @jwt_required()

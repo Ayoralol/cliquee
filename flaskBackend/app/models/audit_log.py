@@ -5,7 +5,7 @@ class Audit_Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     action = db.Column(db.String(64))
-    details = db.Column(db.String(64))
+    details = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.now())
 
 

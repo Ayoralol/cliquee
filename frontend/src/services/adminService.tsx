@@ -37,6 +37,7 @@ export const adminGetLogsService = async (accessToken: string) => {
         "Content-Type": "application/json",
       },
     });
+    console.log("here");
     return await response.json();
   } catch (error) {
     throw error;

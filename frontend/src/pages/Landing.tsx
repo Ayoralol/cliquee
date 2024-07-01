@@ -3,9 +3,9 @@ import {Component} from "solid-js";
 
 const Landing: Component = () => {
   return (
-    <div class="flex-column">
+    <div class="cont-1 flex-column landing-page center">
       <h1>Welcome to Cliquee!</h1>
-      <p class="center-text">
+      <p class="text-center">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Error quam
         perferendis hic nemo nostrum repellendus ea qui fuga. Nesciunt dicta
         accusantium alias beatae. Consectetur repellendus soluta dolorum? Nulla

@@ -36,17 +36,34 @@ const Register: Component = () => {
     <div>
       <form class="flex-column">
         <label>Username</label>
-        <input type="text" onChange={(e) => setUsername(e.target.value)} />
+        <input
+          type="text"
+          onChange={(e) => setUsername(e.target.value)}
+          value={username()}
+        />
         <label>First Name</label>
-        <input type="text" onChange={(e) => setFirstName(e.target.value)} />
+        <input
+          type="text"
+          onChange={(e) => setFirstName(e.target.value)}
+          value={firstName()}
+        />
         <label>Last Name</label>
-        <input type="text" onChange={(e) => setLastName(e.target.value)} />
+        <input
+          type="text"
+          onChange={(e) => setLastName(e.target.value)}
+          value={lastName()}
+        />
         <label>Email</label>
-        <input type="email" onChange={(e) => setEmail(e.target.value)} />
+        <input
+          type="email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email()}
+        />
         <label>Password</label>
         <input
           type={!showPassword() ? "password" : "text"}
           onChange={(e) => setPassword(e.target.value)}
+          value={password()}
         />
         <button onClick={(e) => handleShowPassword(e)}>Show Password</button>
         <button class="marg-20" onClick={(e) => handleSubmit(e)}>
