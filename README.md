@@ -10,6 +10,32 @@ Just enter when you are available and Cliquee will do the rest!
 
 ### Changelog
 
+#### 23/07
+
+- resuming work on this project with this updated readme
+
+### 02/07 - 22/07 TIME OFF
+
+#### 01/07
+
+- Converted DB to postgreSQL
+- wrote frontend notification, conversation, admin, and group services
+- nav updates
+- endpoint bug fixes
+
+#### 30/06
+
+- Added proper login and register frontend
+- Added services allowing my JWT tokens to work
+- added userServices and fixed endpoints to return id's
+
+#### 29/06
+
+- Started Frontend files
+- Added landing and register/login to test
+- fixed errors on username/email
+- Documentation updates
+
 #### 28/06
 
 - Added initial JWT Authentication
